@@ -1,0 +1,162 @@
+[
+    {
+      "shelfIndex": 0,
+      "occ": 1,
+      "shoeIndex": 0,
+      "type": "slippers",
+      "colour": "red",
+      "owner": "john",
+      "imgPath": "red_slippers_5.jpg",
+      "frequency": 5
+    },
+    {
+      "shelfIndex": 1,
+      "occ": 1,
+      "shoeIndex": 1,
+      "type": "sandals",
+      "colour": "orange",
+      "owner": "mary",
+      "imgPath": "orange_sandals_1.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 2,
+      "occ": 1,
+      "shoeIndex": 2,
+      "type": "sneakers",
+      "colour": "yellow",
+      "owner": "john",
+      "imgPath": "yellow_sneakers_5.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 3,
+      "occ": 1,
+      "shoeIndex": 3,
+      "type": "formal",
+      "colour": "green",
+      "owner": "mary",
+      "imgPath": "green_formal_f_6.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 4,
+      "occ": 1,
+      "shoeIndex": 4,
+      "type": "slippers",
+      "colour": "blue",
+      "owner": "john",
+      "imgPath": "blue_slippers_6.jpg",
+      "frequency": 4
+    },
+    {
+      "shelfIndex": 5,
+      "occ": 1,
+      "shoeIndex": 5,
+      "type": "sandals",
+      "colour": "purple",
+      "owner": "mary",
+      "imgPath": "purple_sandals_2.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 6,
+      "occ": 1,
+      "shoeIndex": 6,
+      "type": "sneakers",
+      "colour": "black",
+      "owner": "john",
+      "imgPath": "black_sneakers_5.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 7,
+      "occ": 1,
+      "shoeIndex": 7,
+      "type": "formal",
+      "colour": "grey",
+      "owner": "mary",
+      "imgPath": "grey_formal_f_2.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 8,
+      "occ": 1,
+      "shoeIndex": 8,
+      "type": "slippers",
+      "colour": "white",
+      "owner": "john",
+      "imgPath": "white_slippers_3.jpg",
+      "frequency": 3
+    },
+    {
+      "shelfIndex": 9,
+      "occ": 1,
+      "shoeIndex": 9,
+      "type": "sandals",
+      "colour": "brown",
+      "owner": "mary",
+      "imgPath": "brown_sandals_3.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 10,
+      "occ": 1,
+      "shoeIndex": 10,
+      "type": "sneakers",
+      "colour": "red",
+      "owner": "john",
+      "imgPath": "red_sneakers_6.jpg",
+      "frequency": 1
+    },
+    {
+      "shelfIndex": 11,
+      "occ": 0,
+      "shoeIndex": "",
+      "type": "",
+      "colour": "",
+      "owner": "",
+      "imgPath": "",
+      "frequency": ""
+    },
+    {
+      "shelfIndex": 12,
+      "occ": 0,
+      "shoeIndex": "",
+      "type": "",
+      "colour": "",
+      "owner": "",
+      "imgPath": "",
+      "frequency": ""
+    },
+    {
+      "shelfIndex": 13,
+      "occ": 0,
+      "shoeIndex": "",
+      "type": "",
+      "colour": "",
+      "owner": "",
+      "imgPath": "",
+      "frequency": ""
+    },
+    {
+      "shelfIndex": 14,
+      "occ": 0,
+      "shoeIndex": "",
+      "type": "",
+      "colour": "",
+      "owner": "",
+      "imgPath": "",
+      "frequency": ""
+    },
+    {
+      "shelfIndex": 15,
+      "occ": 0,
+      "shoeIndex": "",
+      "type": "",
+      "colour": "",
+      "owner": "",
+      "imgPath": "",
+      "frequency": ""
+    }
+]
