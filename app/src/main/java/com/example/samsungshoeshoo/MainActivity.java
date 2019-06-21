@@ -65,7 +65,27 @@ public class MainActivity extends AppCompatActivity
         buildRecyclerView();
     }
 
-    public void removeItem(int position) {
+    public void deployItem(int position) {
+        // Send Post Data
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Deploying Shoe...");
+        progressDialog.show();
+
+        JSONObject postData = new JSONObject();
+        try {
+            // PUT postData required to be received by server in JSON Format
+            postData.put("shelfIndex", itemList.get(position).getShelfId());
+
+            // execute AsyncTask to send post data to http server as JSONObject in string format
+            new SendDeviceDetails().execute("http://10.12.156.149:8100/location", postData.toString());
+
+
+            progressDialog.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        // Remove item if succesfully deployed
         itemList.remove(position);
         adapter.notifyItemRemoved(position);
     }
@@ -87,16 +107,17 @@ public class MainActivity extends AppCompatActivity
         adapter = new MyAdapter(this, itemList);
 
         // Get Database and update adapter
-//        getData();
-        getDataLocal();
+        getData();
+//        getDataLocal();
 
         //setting adapter to recycler
         recyclerView.setAdapter(adapter);
 
+        // on click listener for deploy button, calls deploy item method
         adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(int position) {
-                removeItem(position);
+                deployItem(position);
             }
         });
 //        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
@@ -183,8 +204,8 @@ public class MainActivity extends AppCompatActivity
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i=0; i < jsonArray.length(); i++) {
 
-
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
+
                         if(jsonObject.getString("occ").equals("1")) {
                             ListItem item = new ListItem();
                             item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
@@ -219,6 +240,7 @@ public class MainActivity extends AppCompatActivity
         requestQueue.add(jsonObjectRequest);
 
     }
+
 
     // Method to mock database, while testing offline
     private void getDataLocal() {
