@@ -61,7 +61,7 @@ public class SendDeviceDetails extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-        resResponse = result;
+//        delegate.processFinish(result); // call interface to send response from server to main activity
         Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         try{
             JSONObject jsonResponse = new JSONObject(result);
@@ -70,5 +70,16 @@ public class SendDeviceDetails extends AsyncTask<String, Void, String> {
             Log.d("Error", err.toString());
         }
     }
+
+    // interface to send data from post response to main activity
+    public interface AsyncResponse {
+        void processFinish(String output);
+    }
+
+    public AsyncResponse delegate = null;
+
+//    public SendDeviceDetails(AsyncResponse delegate){
+//        this.delegate = delegate;
+//    }
 
 }

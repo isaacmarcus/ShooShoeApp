@@ -7,6 +7,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,9 +33,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener{
 
-    private String url="http://10.12.156.149:8100/shoes";
+    // Mock http from laptop
+//    private String url="http://10.12.156.149:8100/shoes";
+//    private String postUrl="http://10.12.156.149:8100/location";
+
+    // urls from RPI
+    private String url="http://10.12.0.19:8100/shoes";
+    private String postUrl="http://10.12.0.19:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
 
@@ -62,6 +69,17 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Build pull down to refresh view
+        SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
+        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                updateRecyclerView(); // Method to update the recycler view
+                pullToRefresh.setRefreshing(false);
+            }
+        });
+
+        // Method called to build recycler view on opening application
         buildRecyclerView();
     }
 
@@ -77,12 +95,14 @@ public class MainActivity extends AppCompatActivity
             postData.put("shelfIndex", itemList.get(position).getShelfId());
 
             // execute AsyncTask to send post data to http server as JSONObject in string format
-            new SendDeviceDetails().execute("http://10.12.156.149:8100/location", postData.toString());
+            SendDeviceDetails sDD = new SendDeviceDetails();
+            sDD.execute(postUrl, postData.toString());
 
 
             progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
+            progressDialog.dismiss();
         }
 
         // Remove item if succesfully deployed
@@ -120,16 +140,21 @@ public class MainActivity extends AppCompatActivity
                 deployItem(position);
             }
         });
-//        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
-//            @Override
-//            public void onDeployClick(int position) {
-////                AlertDialog.Builder builder = new AlertDialog.Builder();
-////                builder.setMessage("Deploying shoe now...");
-//                removeItem(position);
-//                Snackbar.make(view, "Deploying Shoe Now...", Snackbar.LENGTH_LONG)
-//                        .setAction("Action", null).show();
-//            }
-//        });
+    }
+
+    public void updateRecyclerView () {
+        itemList = new ArrayList<>();
+        adapter = new MyAdapter(this, itemList);
+        getData();
+        recyclerView.setAdapter(adapter);
+
+        // on click listener for deploy button, calls deploy item method
+        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(int position) {
+                deployItem(position);
+            }
+        });
     }
 
     @Override
@@ -264,9 +289,42 @@ public class MainActivity extends AppCompatActivity
         itemList.add(
                 new ListItem(
                         1, 1,
-                        "Sneaker",
-                        "Grey",
+                        "sneaker",
+                        "grey",
+                        "Teagen",
+                        "grey_sneakers_m02"));
+
+        itemList.add(
+                new ListItem(
+                        1, 1,
+                        "sneaker",
+                        "grey",
+                        "Teagen",
+                        "grey_sneakers_m02"));
+
+        itemList.add(
+                new ListItem(
+                        1, 1,
+                        "sneaker",
+                        "grey",
+                        "Teagen",
+                        "grey_sneakers_m02"));
+
+        itemList.add(
+                new ListItem(
+                        1, 1,
+                        "sneaker",
+                        "grey",
+                        "Teagen",
+                        "grey_sneakers_m02"));
+
+        itemList.add(
+                new ListItem(
+                        1, 1,
+                        "sneaker",
+                        "grey",
                         "Teagen",
                         "grey_sneakers_m02"));
     }
+
 }

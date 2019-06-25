@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -80,14 +81,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         return new itemViewHolder(view, mListener);
     }
 
+    public String Capitalize(String input) {
+        return input.substring(0, 1).toUpperCase() + input.substring(1);
+    }
+
     // binds item to view holder
     @Override
     public void onBindViewHolder(@NonNull itemViewHolder itemViewHolder, int position) {
         ListItem item = itemList.get(position);
-
-        itemViewHolder.textViewType.setText(item.getType());
-        itemViewHolder.textViewColour.setText(item.getColour());
-        itemViewHolder.textViewShelfId.setText(String.valueOf(item.getShelfId()));
+        itemViewHolder.textViewType.setText(Capitalize(item.getType()));
+        itemViewHolder.textViewColour.setText(Capitalize(item.getColour()));
+        itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
 
         // For local testing of img
 //        Context context = itemViewHolder.imageView.getContext();
@@ -95,9 +99,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
 //        itemViewHolder.imageView.setImageDrawable(mCtx.getResources().getDrawable(id));
 
         // For receiving img in Bytes
-        byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
-        Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-        itemViewHolder.imageView.setImageBitmap(decodedImg);
+        try {
+            byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
+            Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+            itemViewHolder.imageView.setImageBitmap(decodedImg);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e("Image received in wrong format", item.getImage());
+        }
+
 
     }
 

@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="128dp"
         android:layout_margin="5dp">
 
         <RelativeLayout
+            android:id="@+id/rLayout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:padding="8dp">
@@ -27,9 +29,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/imageView"
+                android:fontFamily="@font/samsungsharpsansbold"
                 android:text="Sneaker"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                android:textColor="#121212" />
+                android:textColor="#121212"
+                app:fontFamily="@font/samsungsharpsansbold" />
 
             <TextView
                 android:id="@+id/textViewColour"
@@ -37,50 +41,37 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewType"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="3dp"
+                android:layout_marginTop="0dp"
                 android:layout_toRightOf="@id/imageView"
+                android:fontFamily="@font/samsungone400"
                 android:text="White"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                app:fontFamily="@font/samsungone700" />
 
             <TextView
-                android:id="@+id/textViewFreq"
+                android:id="@+id/textViewShelfId"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/textViewColour"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="3dp"
                 android:layout_toRightOf="@id/imageView"
-                android:background="@color/colorPrimary"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:text="4.7"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small.Inverse"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/textViewShelfId"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/textViewFreq"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="3dp"
-                android:layout_toRightOf="@id/imageView"
+                android:fontFamily="@font/samsungone400"
                 android:text="Shelf #1"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textStyle="bold" />
+                android:textStyle="normal"
+                app:fontFamily="@font/samsungone400" />
 
             <Button
                 android:id="@+id/deployButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:textColor="#121212"
+                android:layout_alignParentBottom="true"
+                android:background="#EEEEEE"
+                android:fontFamily="@font/samsungone700"
+                android:text="Deploy"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:background="@drawable/buttonshape"
-                android:text="DEPLOY"
-                 />
+                android:textColor="#0F60CB" />
 
         </RelativeLayout>
 
