@@ -2,9 +2,7 @@ package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,12 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -40,7 +36,8 @@ public class MainActivity extends AppCompatActivity
 //    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-    private String url="http://10.12.0.19:8100/shoes";
+//    private String url="http://10.12.0.19:8100/shoes"; // raspberry pi url
+    private String url="http://10.12.156.149:8100/shoes";
     private String postUrl="http://10.12.0.19:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
@@ -53,14 +50,14 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -71,16 +68,32 @@ public class MainActivity extends AppCompatActivity
 
         // Build pull down to refresh view
         SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefresh);
-        pullToRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                updateRecyclerView(); // Method to update the recycler view
-                pullToRefresh.setRefreshing(false);
-            }
+
+        // Add different colours to refresh loading
+        pullToRefresh.setColorSchemeResources(android.R.color.holo_blue_dark,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+        pullToRefresh.setOnRefreshListener(() -> {
+//            Runnable r = () -> updateRecyclerView();
+//            Handler h = new Handler();
+//            h.postDelayed(r,50000);
+            updateRecyclerView();
+            pullToRefresh.setRefreshing(false);
         });
 
+
+        // Pop up progress dialog to show loading database
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Database...");
+        progressDialog.show();
         // Method called to build recycler view on opening application
         buildRecyclerView();
+        progressDialog.dismiss();
+
+        // on click listener for deploy button
+        adapter.setOnItemClickListener(position -> deployItem(position));
     }
 
     public void deployItem(int position) {
@@ -105,7 +118,7 @@ public class MainActivity extends AppCompatActivity
             progressDialog.dismiss();
         }
 
-        // Remove item if succesfully deployed
+        // Remove item if successfully deployed
         itemList.remove(position);
         adapter.notifyItemRemoved(position);
     }
@@ -132,29 +145,14 @@ public class MainActivity extends AppCompatActivity
 
         //setting adapter to recycler
         recyclerView.setAdapter(adapter);
-
-        // on click listener for deploy button, calls deploy item method
-        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                deployItem(position);
-            }
-        });
     }
 
+    // Method to update item list when refresh pull down is triggered
     public void updateRecyclerView () {
-        itemList = new ArrayList<>();
-        adapter = new MyAdapter(this, itemList);
         getData();
-        recyclerView.setAdapter(adapter);
+//        getDataLocal();
+        adapter.notifyDataSetChanged();
 
-        // on click listener for deploy button, calls deploy item method
-        adapter.setOnItemClickListener(new MyAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(int position) {
-                deployItem(position);
-            }
-        });
     }
 
     @Override
@@ -216,9 +214,6 @@ public class MainActivity extends AppCompatActivity
 
     // method to parse Data and attach to List
     private void getData() {
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Database...");
-        progressDialog.show();
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
@@ -226,6 +221,8 @@ public class MainActivity extends AppCompatActivity
             public void onResponse(JSONObject response) {
 
                 try {
+                    itemList.clear(); // empty itemList before putting items in it
+
                     JSONArray jsonArray = response.getJSONArray("data");
                     for(int i=0; i < jsonArray.length(); i++) {
 
@@ -239,8 +236,6 @@ public class MainActivity extends AppCompatActivity
                             item.setColour(jsonObject.getString("colour"));
                             item.setOwner(jsonObject.getString("owner"));
                             item.setImage(jsonObject.getString("img"));
-                            //item.setImage("R.drawable." + jsonObject.getString("img"));
-
                             itemList.add(item);
 
                         }
@@ -248,17 +243,14 @@ public class MainActivity extends AppCompatActivity
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    progressDialog.dismiss();
+//                    progressDialog.dismiss();
                 }
                 adapter.notifyDataSetChanged();
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley",error.toString());
-                progressDialog.dismiss();
-            }
+        }, error -> {
+            Log.e("Volley",error.toString());
+//                progressDialog.dismiss();
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -269,6 +261,7 @@ public class MainActivity extends AppCompatActivity
 
     // Method to mock database, while testing offline
     private void getDataLocal() {
+        itemList.clear();
         itemList.add(
                 new ListItem(
                         1, 1,
@@ -280,7 +273,7 @@ public class MainActivity extends AppCompatActivity
 
         itemList.add(
                 new ListItem(
-                        1, 1,
+                        2, 1,
                         "Sneaker",
                         "Black",
                         "Chrissy",
@@ -288,7 +281,7 @@ public class MainActivity extends AppCompatActivity
 
         itemList.add(
                 new ListItem(
-                        1, 1,
+                        3, 1,
                         "sneaker",
                         "grey",
                         "Teagen",
@@ -325,6 +318,7 @@ public class MainActivity extends AppCompatActivity
                         "grey",
                         "Teagen",
                         "grey_sneakers_m02"));
+        adapter.notifyDataSetChanged();
     }
 
 }
