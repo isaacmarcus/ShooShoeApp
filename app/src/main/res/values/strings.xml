@@ -3,14 +3,14 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Samsung Shoe Shoo</string>
-    <string name="nav_header_subtitle">Some random info string</string>
+    <string name="nav_header_subtitle">Isaac Marcus Lam</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
-    <string name="menu_home">Category 1</string>
-    <string name="menu_gallery">Category 2</string>
-    <string name="menu_slideshow">Category 3</string>
-    <string name="menu_tools">Category 4</string>
+    <string name="menu_favourites">Favourites</string>
+    <string name="menu_sneakers">Sneakers</string>
+    <string name="menu_formal">Formal</string>
+    <string name="menu_slippers">Slippers</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 </resources>

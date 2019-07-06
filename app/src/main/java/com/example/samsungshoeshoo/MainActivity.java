@@ -140,8 +140,8 @@ public class MainActivity extends AppCompatActivity
         adapter = new MyAdapter(this, itemList);
 
         // Get Database and update adapter
-        getData();
-//        getDataLocal();
+//        getData();
+        getDataLocal();
 
         //setting adapter to recycler
         recyclerView.setAdapter(adapter);
@@ -149,8 +149,8 @@ public class MainActivity extends AppCompatActivity
 
     // Method to update item list when refresh pull down is triggered
     public void updateRecyclerView () {
-        getData();
-//        getDataLocal();
+//        getData();
+        getDataLocal();
         adapter.notifyDataSetChanged();
 
     }

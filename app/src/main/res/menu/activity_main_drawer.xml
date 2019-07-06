@@ -7,23 +7,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:icon="@drawable/ic_stars_black_24dp"
+            android:title="@string/menu_favourites" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_circle_black_24dp"
+            android:title="@string/menu_sneakers" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:icon="@drawable/ic_circle_black_24dp"
+            android:title="@string/menu_formal" />
         <item
             android:id="@+id/nav_tools"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="@string/menu_tools" />
+            android:icon="@drawable/ic_circle_black_24dp"
+            android:title="@string/menu_slippers" />
     </group>
 
-    <item android:title="More to add here">
+    <item android:title="Social Media">
         <menu>
             <item
                 android:id="@+id/nav_share"

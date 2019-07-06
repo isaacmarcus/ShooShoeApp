@@ -1,12 +1,8 @@
 package com.example.samsungshoeshoo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -94,19 +90,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
 
         // For local testing of img
-//        Context context = itemViewHolder.imageView.getContext();
-//        int id = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
-//        itemViewHolder.imageView.setImageDrawable(mCtx.getResources().getDrawable(id));
+        Context context = itemViewHolder.imageView.getContext();
+        int id = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
+        itemViewHolder.imageView.setImageDrawable(mCtx.getResources().getDrawable(id));
 
         // For receiving img in Bytes
-        try {
-            byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
-            Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            itemViewHolder.imageView.setImageBitmap(decodedImg);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Log.e("Image received in wrong format", item.getImage());
-        }
+//        try {
+//            byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
+//            Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//            itemViewHolder.imageView.setImageBitmap(decodedImg);
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//            Log.e("Image received in wrong format", item.getImage());
+//        }
 
 
     }
