@@ -73,7 +73,7 @@
                 android:fontFamily="@font/samsungone400"
                 android:text="DEPLOY"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                android:textColor="#0F60CB" />
+                android:textColor="@color/colorPrimary"/>
 
         </RelativeLayout>
 

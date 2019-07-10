@@ -111,12 +111,13 @@ public class MainActivity extends AppCompatActivity
             SendDeviceDetails sDD = new SendDeviceDetails();
             sDD.execute(postUrl, postData.toString());
 
-
             progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
             progressDialog.dismiss();
         }
+
+        //TODO: Add if statement for if message received from post is successful
 
         // Remove item if successfully deployed
         itemList.remove(position);
@@ -155,6 +156,7 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // method for closing drawer with back button if it is open
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -187,19 +189,19 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    // Listener for navigation items
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_home) {
+        if (id == R.id.nav_favourites) {
             // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        } else if (id == R.id.nav_sneakers) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_formal) {
 
-        } else if (id == R.id.nav_tools) {
+        } else if (id == R.id.nav_slippers) {
 
         } else if (id == R.id.nav_share) {
 

@@ -18,8 +18,13 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+        // Find ImageView of Logo
         ssLogo = findViewById(R.id.ssLogo);
+
+        // Create Animation
         Animation startAnim = AnimationUtils.loadAnimation(this,R.anim.splashtrans);
+
+        // Start Animation on Image View of Logo
         ssLogo.startAnimation(startAnim);
 
         Thread welcomeThread = new Thread() {
@@ -28,7 +33,7 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 try {
                     super.run();
-                    sleep(1000);  //Delay of 2 seconds
+                    sleep(1000);  // Delay of 1 second
                 } catch (Exception e) {
 
                 } finally {
