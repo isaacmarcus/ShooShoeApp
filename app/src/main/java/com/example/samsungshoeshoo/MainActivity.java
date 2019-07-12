@@ -14,10 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -32,17 +32,18 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     // Mock http from laptop
-//    private String url="http://10.12.156.149:8100/shoes";
-//    private String postUrl="http://10.12.156.149:8100/location";
+    private String url="http://10.12.156.149:8100/shoes";
+    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
 //    private String url="http://10.12.0.19:8100/shoes"; // raspberry pi url
-    private String url="http://10.12.156.149:8100/shoes";
-    private String postUrl="http://10.12.0.19:8100/location";
+//    private String postUrl="http://10.12.0.19:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
 
     private List<ListItem> itemList;
+
+    private String currentCategory = "favourites";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,10 +76,8 @@ public class MainActivity extends AppCompatActivity
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
 
+        // pull to refresh listener
         pullToRefresh.setOnRefreshListener(() -> {
-//            Runnable r = () -> updateRecyclerView();
-//            Handler h = new Handler();
-//            h.postDelayed(r,50000);
             updateRecyclerView();
             pullToRefresh.setRefreshing(false);
         });
@@ -141,8 +140,7 @@ public class MainActivity extends AppCompatActivity
         adapter = new MyAdapter(this, itemList);
 
         // Get Database and update adapter
-//        getData();
-        getDataLocal();
+        updateRecyclerView();
 
         //setting adapter to recycler
         recyclerView.setAdapter(adapter);
@@ -150,10 +148,10 @@ public class MainActivity extends AppCompatActivity
 
     // Method to update item list when refresh pull down is triggered
     public void updateRecyclerView () {
-//        getData();
-        getDataLocal();
+        recyclerView.getRecycledViewPool().clear();
+        getData();
+//        getDataLocal();
         adapter.notifyDataSetChanged();
-
     }
 
     // method for closing drawer with back button if it is open
@@ -190,27 +188,28 @@ public class MainActivity extends AppCompatActivity
     }
 
     // Listener for navigation items
-    @Override
+//    @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_favourites) {
-            // Handle the camera action
+            currentCategory = "favourites";
         } else if (id == R.id.nav_sneakers) {
-
+            currentCategory = "sneaker";
         } else if (id == R.id.nav_formal) {
-
+            currentCategory = "formal";
         } else if (id == R.id.nav_slippers) {
-
+            currentCategory = "slipper";
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
 
         }
-
+        updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        Toast.makeText(getApplicationContext(),currentCategory + " category selected.",Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -218,38 +217,66 @@ public class MainActivity extends AppCompatActivity
     private void getData() {
 
         // Json Request
-        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
 
-                try {
-                    itemList.clear(); // empty itemList before putting items in it
+            try {
+                List<ListItem> currentItemList = new ArrayList<>();
 
-                    JSONArray jsonArray = response.getJSONArray("data");
-                    for(int i=0; i < jsonArray.length(); i++) {
+                JSONArray jsonArray = response.getJSONArray("data");
+                for(int i=0; i < jsonArray.length(); i++) {
 
-                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                        if(jsonObject.getString("occ").equals("1")) {
-                            ListItem item = new ListItem();
-                            item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
-                            item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
-                            item.setType(jsonObject.getString("type"));
-                            item.setColour(jsonObject.getString("colour"));
-                            item.setOwner(jsonObject.getString("owner"));
-                            item.setImage(jsonObject.getString("img"));
-                            itemList.add(item);
+                    // Add jsonObject only if the occupied field is 1
+                    if(jsonObject.getString("occ").equals("1")) {
+                        ListItem item = new ListItem();
+                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
+                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
+                        item.setType(jsonObject.getString("type"));
+                        item.setColour(jsonObject.getString("colour"));
+                        item.setOwner(jsonObject.getString("owner"));
+                        item.setImage(jsonObject.getString("img"));
 
+                        // switch case to add based on current category selected
+                        switch(currentCategory) {
+                            case "favourites":
+                                currentItemList.add(item);
+                                break;
+                            case "sneaker":
+                                if(item.getType().equals("sneakers")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            case "formal":
+                                if(item.getType().equals("formal")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            case "slipper":
+                                if(item.getType().equals("slippers")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            default:
+                                break;
                         }
 
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-//                    progressDialog.dismiss();
+
                 }
+
+                itemList.clear(); // empty itemList before putting items in it
+                itemList.addAll(currentItemList);
                 adapter.notifyDataSetChanged();
-//                progressDialog.dismiss();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+//                    progressDialog.dismiss();
             }
+//                progressDialog.dismiss();
         }, error -> {
             Log.e("Volley",error.toString());
 //                progressDialog.dismiss();
@@ -267,8 +294,8 @@ public class MainActivity extends AppCompatActivity
         itemList.add(
                 new ListItem(
                         1, 1,
-                        "Sneaker",
-                        "White",
+                        "sneaker",
+                        "white",
                         "Johny",
                         "white_sneakers_m02"));
 
@@ -276,8 +303,8 @@ public class MainActivity extends AppCompatActivity
         itemList.add(
                 new ListItem(
                         2, 1,
-                        "Sneaker",
-                        "Black",
+                        "sneaker",
+                        "black",
                         "Chrissy",
                         "black_sneakers_m04"));
 
@@ -293,7 +320,15 @@ public class MainActivity extends AppCompatActivity
                 new ListItem(
                         1, 1,
                         "sneaker",
-                        "grey",
+                        "red",
+                        "Teagen",
+                        "grey_sneakers_m02"));
+
+        itemList.add(
+                new ListItem(
+                        1, 1,
+                        "sneaker",
+                        "blue",
                         "Teagen",
                         "grey_sneakers_m02"));
 
@@ -312,15 +347,6 @@ public class MainActivity extends AppCompatActivity
                         "grey",
                         "Teagen",
                         "grey_sneakers_m02"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "grey",
-                        "Teagen",
-                        "grey_sneakers_m02"));
-        adapter.notifyDataSetChanged();
     }
 
 }
