@@ -14,7 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -43,12 +43,15 @@ public class MainActivity extends AppCompatActivity
 
     private List<ListItem> itemList;
 
-    private String currentCategory = "favourites";
+    private String currentCategory = "Favourites";
+    TextView currentCategoryTV = findViewById(R.id.categoryTextView);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set up items that need to be found by ID
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 //        FloatingActionButton fab = findViewById(R.id.fab);
@@ -61,6 +64,8 @@ public class MainActivity extends AppCompatActivity
 //        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
+
+        // Action Bar Drawer toggle for side pull
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -152,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         getData();
 //        getDataLocal();
         adapter.notifyDataSetChanged();
+        currentCategoryTV.setText("Your " + currentCategory);
     }
 
     // method for closing drawer with back button if it is open
@@ -194,13 +200,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favourites) {
-            currentCategory = "favourites";
+            currentCategory = "Favourites";
         } else if (id == R.id.nav_sneakers) {
-            currentCategory = "sneaker";
+            currentCategory = "Sneakers";
         } else if (id == R.id.nav_formal) {
-            currentCategory = "formal";
+            currentCategory = "Formal";
         } else if (id == R.id.nav_slippers) {
-            currentCategory = "slipper";
+            currentCategory = "Slippers";
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -209,7 +215,7 @@ public class MainActivity extends AppCompatActivity
         updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-        Toast.makeText(getApplicationContext(),currentCategory + " category selected.",Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(),currentCategory + " category selected.",Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -239,22 +245,22 @@ public class MainActivity extends AppCompatActivity
 
                         // switch case to add based on current category selected
                         switch(currentCategory) {
-                            case "favourites":
+                            case "Favourites":
                                 currentItemList.add(item);
                                 break;
-                            case "sneaker":
+                            case "Sneakers":
                                 if(item.getType().equals("sneakers")) {
                                     currentItemList.add(item);
                                 } else {
                                     break;
                                 }
-                            case "formal":
+                            case "Formal":
                                 if(item.getType().equals("formal")) {
                                     currentItemList.add(item);
                                 } else {
                                     break;
                                 }
-                            case "slipper":
+                            case "Slippers":
                                 if(item.getType().equals("slippers")) {
                                     currentItemList.add(item);
                                 } else {

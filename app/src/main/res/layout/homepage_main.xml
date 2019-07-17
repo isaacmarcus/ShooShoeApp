@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+    android:id="@+id/pullToRefreshHome"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+    <RelativeLayout
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:clipChildren="false"
+        android:orientation="vertical"
+        >
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/weatherDisplay"
+            android:layout_width="fill_parent"
+            android:layout_height="250dp"
+            app:cardCornerRadius="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/rainy_weathercard">
+
+
+                <TextView
+                    android:id="@+id/tempTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:text="24°C"
+                    android:textSize="50dp"
+                    app:fontFamily="@font/samsungone400"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tempDeitsTextView"
+                    android:layout_width="250dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="15dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/tempTextView"
+                    android:text="There are\ngoing to be\npuddles today."
+                    android:textSize="30dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="#FFFFFF"
+                    app:fontFamily="@font/samsungone400" />
+
+
+            </RelativeLayout>
+
+
+
+        </android.support.v7.widget.CardView>
+
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/recommendCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="-35dp"
+            app:cardCornerRadius="8dp"
+            card_view:cardElevation="20dp"
+            card_view:cardPreventCornerOverlap="true"
+            android:layout_below="@+id/weatherDisplay">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp">
+
+                <TextView
+                    android:id="@+id/recTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_alignParentLeft="true"
+                    android:fontFamily="@font/samsungone700"
+                    android:text="We recommend"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                    android:textColor="#121212"
+                    app:fontFamily="@font/samsungone700" />
+
+                <ImageView
+                    android:id="@+id/recImgView1"
+                    android:layout_width="115dp"
+                    android:layout_height="115dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/recTextView"
+                    android:padding="4dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/black_sneakers_m04"/>
+
+                <ImageView
+                    android:id="@+id/recImgView2"
+                    android:layout_width="115dp"
+                    android:layout_height="115dp"
+                    android:layout_below="@+id/recTextView"
+                    android:layout_centerInParent="true"
+                    android:padding="4dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/black_sneakers_m04"/>
+
+                <ImageView
+                    android:id="@+id/recImgView3"
+                    android:layout_width="115dp"
+                    android:layout_height="115dp"
+                    android:layout_below="@+id/recTextView"
+                    android:layout_alignParentRight="true"
+                    android:padding="4dp"
+                    android:layout_margin="5dp"
+                    android:background="@drawable/black_sneakers_m04"/>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/buttonsCard"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/recommendCard"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
+            android:background="@null"
+            app:cardElevation="0dp"
+            >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <LinearLayout
+                    android:id ="@+id/favButt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="23dp"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/button_bg_round"
+                        />
+
+                    <TextView
+                        android:id="@+id/favButtTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Favourites"
+                        android:fontFamily="@font/samsungone400"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:id ="@+id/sneakerButt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="23dp"
+                    android:layout_toRightOf="@+id/favButt"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/button_bg_round"
+                        />
+
+                    <TextView
+                        android:id="@+id/sneakerButtTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Sneakers"
+                        android:fontFamily="@font/samsungone400"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id ="@+id/formalButt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="23dp"
+                    android:layout_toRightOf="@+id/sneakerButt"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/button_bg_round"
+                        />
+
+                    <TextView
+                        android:id="@+id/formalButtTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Formals"
+                        android:fontFamily="@font/samsungone400"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id ="@+id/slipperButt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@+id/formalButt"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:background="@drawable/button_bg_round"
+                        />
+
+                    <TextView
+                        android:id="@+id/slipperButtTextView"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Slippers"
+                        android:fontFamily="@font/samsungone400"
+                        android:textColor="#000000"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/favouritesRec1TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonsCard"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:text="These are your "
+            app:fontFamily="@font/samsungone700"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="#121212"
+            />
+
+        <TextView
+            android:id="@+id/favouritesRec2TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/buttonsCard"
+            android:layout_toRightOf="@+id/favouritesRec1TextView"
+            android:layout_marginTop="10dp"
+            android:text="favourites"
+            app:fontFamily="@font/samsungone700"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="#FF0000"/>
+
+        <HorizontalScrollView
+            android:id="@+id/favouritesHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/favouritesRec1TextView"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/favouritesRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:orientation="horizontal"
+                />
+        </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/unusedRecTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/favouritesHolder"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="15dp"
+            android:text="Show these shoes some love"
+            app:fontFamily="@font/samsungone700"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+            android:textColor="#121212"
+            />
+
+        <HorizontalScrollView
+            android:id="@+id/unUsedHolder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/unusedRecTextView"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/unUsedRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="128dp"
+                android:orientation="horizontal"
+                />
+        </HorizontalScrollView>
+
+
+    </RelativeLayout>
+
+</android.support.v4.widget.SwipeRefreshLayout>
