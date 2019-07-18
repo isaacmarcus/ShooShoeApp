@@ -3,10 +3,13 @@ package com.example.samsungshoeshoo;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ViewGroup;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,13 +72,14 @@ public class MainHomePage extends AppCompatActivity {
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
         extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
 
-//        TextView tempTextView = findViewById(R.id.tempTextView);
-//
-//        ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
-//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-//            params.topMargin = insets.getSystemWindowInsetTop();
-//            return insets.consumeSystemWindowInsets();
-//        });
+        // find temperature tex view
+        TextView tempTextView = findViewById(R.id.tempTextView);
+        // Adjust Text View of temperature to include padding at top of status bar height
+        ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            params.topMargin = insets.getSystemWindowInsetTop();
+            return insets.consumeSystemWindowInsets();
+        });
     }
 
 //    @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
