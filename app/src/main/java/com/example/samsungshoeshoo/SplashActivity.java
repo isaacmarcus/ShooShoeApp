@@ -39,7 +39,7 @@ public class SplashActivity extends AppCompatActivity {
                 } finally {
 
                     Intent i = new Intent(SplashActivity.this,
-                            MainActivity.class);
+                            MainHomePage.class);
                     startActivity(i);
                     finish();
                 }

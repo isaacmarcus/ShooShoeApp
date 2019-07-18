@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity
         // Set up items that need to be found by ID
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //TODO: Implement colour sorting through floating action button
 //        FloatingActionButton fab = findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -157,7 +159,6 @@ public class MainActivity extends AppCompatActivity
         getData();
 //        getDataLocal();
         adapter.notifyDataSetChanged();
-        currentCategoryTV.setText("Your " + currentCategory);
     }
 
     // method for closing drawer with back button if it is open
@@ -212,10 +213,10 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
+        currentCategoryTV.setText("Your " + currentCategory); // change title on page
         updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-//        Toast.makeText(getApplicationContext(),currentCategory + " category selected.",Toast.LENGTH_SHORT).show();
         return true;
     }
 
@@ -295,7 +296,7 @@ public class MainActivity extends AppCompatActivity
 
 
     // Method to mock database, while testing offline
-    private void getDataLocal() {
+    private void getDataLocal(List<ListItem> itemList) {
         itemList.clear();
         itemList.add(
                 new ListItem(

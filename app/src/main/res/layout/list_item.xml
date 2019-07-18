@@ -13,7 +13,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
-        card_view:cardElevation="20dp"
+        card_view:cardElevation="3dp"
         app:cardCornerRadius="8dp">
 
         <RelativeLayout
