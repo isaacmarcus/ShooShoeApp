@@ -39,4 +39,5 @@ dependencies {
     implementation 'org.testifyproject.mock:mockito:1.0.6'
     annotationProcessor 'org.testifyproject:api:1.0.6'
     testImplementation "org.junit.jupiter:junit-jupiter-api:5.0.1"
+    implementation 'com.jaeger.statusbarutil:library:1.4.0'
 }

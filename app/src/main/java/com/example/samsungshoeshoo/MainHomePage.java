@@ -7,7 +7,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.WindowManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,11 +35,10 @@ public class MainHomePage extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         // gets rid of top notification bar
 //        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.homepage_main);
 
@@ -70,7 +68,26 @@ public class MainHomePage extends AppCompatActivity {
         // on click listeners for deploy buttons
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
         extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
+
+//        TextView tempTextView = findViewById(R.id.tempTextView);
+//
+//        ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
+//            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+//            params.topMargin = insets.getSystemWindowInsetTop();
+//            return insets.consumeSystemWindowInsets();
+//        });
     }
+
+//    @TargetApi(Build.VERSION_CODES.KITKAT_WATCH)
+//    @Override
+//    public WindowInsets onApplyWindowInsets(WindowInsets insets) {
+//        int childCount = getChildCount();
+//        for (int index = 0; index < childCount; ++index)
+//            getChildAt(index).dispatchApplyWindowInsets(insets);
+//        // let children know about WindowInsets
+//
+//        return insets;
+//    }
 
     public void deployItem(int position, MyAdapter adapter, List<ListItem> itemList) {
         // Send Post Data
