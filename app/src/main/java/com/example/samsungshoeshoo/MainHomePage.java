@@ -1,6 +1,7 @@
 package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -40,6 +42,12 @@ public class MainHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_main);
 
+        // Find buttons, using linear layout so buttons and text below will both trigger on click
+        LinearLayout favButt = findViewById(R.id.favButt);
+        LinearLayout sneakerButt = findViewById(R.id.sneakerButt);
+        LinearLayout formalButt = findViewById(R.id.formalButt);
+        LinearLayout slipperButt = findViewById(R.id.slipperButt);
+
         // Build pull down to refresh view
         SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefreshHome);
 
@@ -66,6 +74,10 @@ public class MainHomePage extends AppCompatActivity {
         // on click listeners for deploy buttons
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
         extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
+        favButt.setOnClickListener(v -> {
+            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            startActivity(main_intent);
+        });
 
         // find temperature text view
         TextView tempTextView = findViewById(R.id.tempTextView);

@@ -159,6 +159,7 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/button_bg_round"
+                            android:clickable="false"
                             />
 
                         <TextView
@@ -185,6 +186,7 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/button_bg_round"
+                            android:clickable="false"
                             />
 
                         <TextView
@@ -210,6 +212,7 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/button_bg_round"
+                            android:clickable="false"
                             />
 
                         <TextView
@@ -233,6 +236,7 @@
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/button_bg_round"
+                            android:clickable="false"
                             />
 
                         <TextView
@@ -275,7 +279,7 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/favouritesRecyclerView"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/favouritesRec1TextView"
                 android:paddingBottom="15dp"

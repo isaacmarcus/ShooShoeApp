@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,7 +43,7 @@ public class MainActivity extends AppCompatActivity
     private List<ListItem> itemList;
 
     private String currentCategory = "Favourites";
-    TextView currentCategoryTV = findViewById(R.id.categoryTextView);
+//    private TextView currentCategoryTV = findViewById(R.id.categoryTextView);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +53,9 @@ public class MainActivity extends AppCompatActivity
         // Set up items that need to be found by ID
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setTitle("");
+        toolbar.setSubtitle("");
 
         //TODO: Implement colour sorting through floating action button
 //        FloatingActionButton fab = findViewById(R.id.fab);
@@ -157,7 +159,7 @@ public class MainActivity extends AppCompatActivity
     public void updateRecyclerView () {
         recyclerView.getRecycledViewPool().clear();
         getData();
-//        getDataLocal();
+        getDataLocal();
         adapter.notifyDataSetChanged();
     }
 
@@ -213,7 +215,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-        currentCategoryTV.setText("Your " + currentCategory); // change title on page
+//        currentCategoryTV.setText("Your " + currentCategory); // change title on page
         updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -296,7 +298,7 @@ public class MainActivity extends AppCompatActivity
 
 
     // Method to mock database, while testing offline
-    private void getDataLocal(List<ListItem> itemList) {
+    private void getDataLocal() {
         itemList.clear();
         itemList.add(
                 new ListItem(
