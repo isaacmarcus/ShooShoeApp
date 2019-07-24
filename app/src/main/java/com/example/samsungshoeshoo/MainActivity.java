@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -31,24 +32,28 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     // Mock http from laptop
-    private String url="http://10.12.156.149:8100/shoes";
-    private String postUrl="http://10.12.156.149:8100/location";
+//    private String url="http://10.12.156.149:8100/shoes";
+//    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-//    private String url="http://10.12.0.19:8100/shoes"; // raspberry pi url
-//    private String postUrl="http://10.12.0.19:8100/location";
+    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
+    private String postUrl="http://10.12.0.18:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
 
     private List<ListItem> itemList;
 
     private String currentCategory = "Favourites";
-//    private TextView currentCategoryTV = findViewById(R.id.categoryTextView);
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // getting bundle from previous activity
+        Bundle bundle = getIntent().getExtras();
+        currentCategory = bundle.getString("category");
 
         // Set up items that need to be found by ID
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -157,9 +162,11 @@ public class MainActivity extends AppCompatActivity
 
     // Method to update item list when refresh pull down is triggered
     public void updateRecyclerView () {
+        final TextView currentCategoryTV = findViewById(R.id.categoryTextView);
+        currentCategoryTV.setText("Your " + currentCategory); // change title on page
         recyclerView.getRecycledViewPool().clear();
         getData();
-        getDataLocal();
+//        getDataLocal();
         adapter.notifyDataSetChanged();
     }
 
@@ -207,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_sneakers) {
             currentCategory = "Sneakers";
         } else if (id == R.id.nav_formal) {
-            currentCategory = "Formal";
+            currentCategory = "Formals";
         } else if (id == R.id.nav_slippers) {
             currentCategory = "Slippers";
         } else if (id == R.id.nav_share) {
@@ -215,7 +222,6 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }
-//        currentCategoryTV.setText("Your " + currentCategory); // change title on page
         updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -257,7 +263,7 @@ public class MainActivity extends AppCompatActivity
                                 } else {
                                     break;
                                 }
-                            case "Formal":
+                            case "Formals":
                                 if(item.getType().equals("formal")) {
                                     currentItemList.add(item);
                                 } else {

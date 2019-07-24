@@ -1,12 +1,9 @@
 package com.example.samsungshoeshoo;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
+public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHolder> {
 
     private Context mCtx;
     private List<ListItem> itemList; // list to contain items in adapter
@@ -37,6 +34,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         ImageView imageView;
         TextView textViewType, textViewColour, textViewShelfId;
         Button deployBut;
+        CardView listItemCardView;
 
         itemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
@@ -45,6 +43,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
             textViewColour = itemView.findViewById(R.id.textViewColour);
             textViewShelfId = itemView.findViewById(R.id.textViewShelfId);
             deployBut = itemView.findViewById(R.id.deployButton);
+            listItemCardView = itemView.findViewById(R.id.listItemCardView);
 
             // WORKING
             deployBut.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         return itemList.size();
     }
 
-    MyAdapter(Context mCtx, List<ListItem> itemList) {
+    MyHomeAdapter(Context mCtx, List<ListItem> itemList) {
         this.mCtx = mCtx;
         this.itemList = itemList;
     }
@@ -96,19 +95,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
 
         // For local testing of img
-//        Context context = itemViewHolder.imageView.getContext();
-//        int id = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
-//        itemViewHolder.imageView.setImageDrawable(mCtx.getResources().getDrawable(id));
+        Context context = itemViewHolder.imageView.getContext();
+        int id = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
+        itemViewHolder.imageView.setImageDrawable(mCtx.getResources().getDrawable(id));
 
         // For receiving img in Bytes
-        try {
-            byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
-            Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            itemViewHolder.imageView.setImageBitmap(decodedImg);
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
-            Log.e("Image received in wrong format", item.getImage());
-        }
+//        try {
+//            byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
+//            Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//            itemViewHolder.imageView.setImageBitmap(decodedImg);
+//        } catch (IllegalArgumentException e) {
+//            e.printStackTrace();
+//            Log.e("Image received in wrong format", item.getImage());
+//        }
 
 
     }

@@ -152,23 +152,25 @@
                         android:id ="@+id/favButt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="23dp"
-                        android:orientation="vertical">
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
                         <Button
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:background="@drawable/button_bg_round"
+                            android:background="@drawable/sandal_icon"
                             android:clickable="false"
                             />
 
                         <TextView
                             android:id="@+id/favButtTextView"
-                            android:layout_width="70dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:text="Favourites"
-                            android:fontFamily="@font/samsungone400"
+                            app:fontFamily="@font/samsungone400"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#000000"/>
                     </LinearLayout>
 
@@ -178,24 +180,27 @@
                         android:id ="@+id/sneakerButt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="23dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_toRightOf="@+id/favButt"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@+id/favButt">
 
                         <Button
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:background="@drawable/button_bg_round"
+                            android:background="@drawable/sneaker_icon"
                             android:clickable="false"
                             />
 
                         <TextView
                             android:id="@+id/sneakerButtTextView"
-                            android:layout_width="70dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:text="Sneakers"
-                            android:fontFamily="@font/samsungone400"
+                            app:fontFamily="@font/samsungone400"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#000000"/>
                     </LinearLayout>
 
@@ -204,24 +209,27 @@
                         android:id ="@+id/formalButt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="23dp"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_toRightOf="@+id/sneakerButt"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                        android:layout_toEndOf="@+id/sneakerButt">
 
                         <Button
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:background="@drawable/button_bg_round"
+                            android:background="@drawable/formal_icon"
                             android:clickable="false"
                             />
 
                         <TextView
                             android:id="@+id/formalButtTextView"
-                            android:layout_width="70dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:text="Formals"
-                            android:fontFamily="@font/samsungone400"
+                            app:fontFamily="@font/samsungone400"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#000000"/>
                     </LinearLayout>
 
@@ -235,17 +243,18 @@
                         <Button
                             android:layout_width="70dp"
                             android:layout_height="70dp"
-                            android:background="@drawable/button_bg_round"
+                            android:background="@drawable/slipper_icon"
                             android:clickable="false"
                             />
 
                         <TextView
                             android:id="@+id/slipperButtTextView"
-                            android:layout_width="70dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:text="Slippers"
-                            android:fontFamily="@font/samsungone400"
+                            app:fontFamily="@font/samsungone400"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#000000"/>
                     </LinearLayout>
 
@@ -283,7 +292,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/favouritesRec1TextView"
                 android:paddingBottom="15dp"
-                android:paddingHorizontal="12dp"
+                android:layout_marginHorizontal="7dp"
                 />
 
             <TextView
@@ -303,7 +312,7 @@
                 android:id="@+id/extraRecyclerView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="12dp"
+                android:layout_marginHorizontal="7dp"
                 android:paddingBottom="15dp"
                 android:layout_below="@+id/unusedRecTextView"
                 />

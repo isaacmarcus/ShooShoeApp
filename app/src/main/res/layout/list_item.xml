@@ -7,11 +7,11 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.CardView
+        android:id="@+id/listItemCardView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginHorizontal="5dp"
         android:layout_marginTop="5dp"
         card_view:cardElevation="3dp"
         app:cardCornerRadius="8dp">
@@ -36,11 +36,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@id/imageView"
-                android:fontFamily="@font/samsungone700"
                 android:text="Sneaker"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textColor="#121212"
-                app:fontFamily="@font/samsungsharpsansbold" />
+                app:fontFamily="@font/samsungone700"
+                android:layout_marginStart="5dp" />
 
             <TextView
                 android:id="@+id/textViewColour"
@@ -50,7 +50,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="0dp"
                 android:layout_toRightOf="@id/imageView"
-                android:fontFamily="@font/samsungone400"
+                app:fontFamily="@font/samsungone400"
                 android:text="White"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="3dp"
                 android:layout_toRightOf="@id/imageView"
-                android:fontFamily="@font/samsungone400"
+                app:fontFamily="@font/samsungone400"
                 android:text="Shelf #1"
                 android:textStyle="normal" />
 
@@ -75,7 +75,7 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginRight="-5dp"
                 android:background="@null"
-                android:fontFamily="@font/samsungone400"
+                app:fontFamily="@font/samsungone400"
                 android:text="DEPLOY"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
                 android:textColor="@color/colorPrimary"
@@ -84,34 +84,5 @@
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
-
-    <!--<android.support.v7.widget.CardView-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_marginLeft="5dp"-->
-        <!--android:layout_marginRight="5dp"-->
-        <!--android:layout_marginBottom="5dp">-->
-
-        <!--<RelativeLayout-->
-            <!--android:id="@+id/rLayout2"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:padding="8dp">-->
-
-            <!--<Button-->
-                <!--android:id="@+id/deployButton"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="35dp"-->
-                <!--android:layout_alignParentRight="true"-->
-                <!--android:layout_marginRight="-5dp"-->
-                <!--android:background="@null"-->
-                <!--android:fontFamily="@font/samsungone400"-->
-                <!--android:text="DEPLOY"-->
-                <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"-->
-                <!--android:textColor="#0F60CB" />-->
-
-        <!--</RelativeLayout>-->
-
-    <!--</android.support.v7.widget.CardView>-->
 
 </LinearLayout>

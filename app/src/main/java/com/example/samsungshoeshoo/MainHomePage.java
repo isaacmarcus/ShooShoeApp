@@ -9,10 +9,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,12 +29,12 @@ import java.util.List;
 public class MainHomePage extends AppCompatActivity {
 
     // Mock http from laptop
-    private String url="http://10.12.156.149:8100/shoes";
-    private String postUrl="http://10.12.156.149:8100/location";
+//    private String url="http://10.12.156.149:8100/shoes";
+//    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-//    private String url="http://10.12.0.19:8100/shoes"; // raspberry pi url
-//    private String postUrl="http://10.12.0.19:8100/location";
+    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
+    private String postUrl="http://10.12.0.18:8100/location";
 
     private RecyclerView favouritesRecyclerView;
     private MyAdapter favouritesAdapter;
@@ -74,8 +81,26 @@ public class MainHomePage extends AppCompatActivity {
         // on click listeners for deploy buttons
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
         extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
+
+        // on click listeners for categories to deploy page
         favButt.setOnClickListener(v -> {
             Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            main_intent.putExtra("category","Favourites");
+            startActivity(main_intent);
+        });
+        sneakerButt.setOnClickListener(v -> {
+            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            main_intent.putExtra("category","Sneakers");
+            startActivity(main_intent);
+        });
+        formalButt.setOnClickListener(v -> {
+            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            main_intent.putExtra("category","Formals");
+            startActivity(main_intent);
+        });
+        slipperButt.setOnClickListener(v -> {
+            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            main_intent.putExtra("category","Slippers");
             startActivity(main_intent);
         });
 
@@ -85,6 +110,12 @@ public class MainHomePage extends AppCompatActivity {
         ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
             params.topMargin = insets.getSystemWindowInsetTop();
+            return insets.consumeSystemWindowInsets();
+        });
+
+        ViewCompat.setOnApplyWindowInsetsListener(extraRecyclerView, (v, insets) -> {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            params.bottomMargin = insets.getSystemWindowInsetBottom();
             return insets.consumeSystemWindowInsets();
         });
     }
@@ -118,6 +149,7 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     private void updatePage() {
+//        getData();
         getDataLocal(favouritesItemList);
         getDataLocal(extraItemList);
         favouritesAdapter.notifyDataSetChanged();
@@ -152,6 +184,80 @@ public class MainHomePage extends AppCompatActivity {
         //setting adapter to recycler
         favouritesRecyclerView.setAdapter(favouritesAdapter);
         extraRecyclerView.setAdapter(extraAdapter);
+    }
+
+    // method to parse Data and attach to List
+    private void getData(String currentCategory, List<ListItem> itemList) {
+
+        // Json Request
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
+
+            try {
+                List<ListItem> currentItemList = new ArrayList<>();
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                for(int i=0; i < jsonArray.length(); i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    // Add jsonObject only if the occupied field is 1
+                    if(jsonObject.getString("occ").equals("1")) {
+                        ListItem item = new ListItem();
+                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
+                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
+                        item.setType(jsonObject.getString("type"));
+                        item.setColour(jsonObject.getString("colour"));
+                        item.setOwner(jsonObject.getString("owner"));
+                        item.setImage(jsonObject.getString("img"));
+
+                        // switch case to add based on current category selected
+                        switch(currentCategory) {
+                            case "Favourites":
+                                currentItemList.add(item);
+                                break;
+                            case "Sneakers":
+                                if(item.getType().equals("sneakers")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            case "Formal":
+                                if(item.getType().equals("formal")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            case "Slippers":
+                                if(item.getType().equals("slippers")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
+                            default:
+                                break;
+                        }
+
+                    }
+
+                }
+
+                itemList.clear(); // empty itemList before putting items in it
+                itemList.addAll(currentItemList);
+//                adapter.notifyDataSetChanged();
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+//                    progressDialog.dismiss();
+            }
+//                progressDialog.dismiss();
+        }, error -> {
+            Log.e("Volley",error.toString());
+//                progressDialog.dismiss();
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
+
     }
 
     // Method to mock database, while testing offline
