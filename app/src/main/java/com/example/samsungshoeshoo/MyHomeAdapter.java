@@ -48,15 +48,12 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
             listItemCardView = itemView.findViewById(R.id.listItemCardView);
 
             // WORKING
-            deployBut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener != null) {
-                        int position = getAdapterPosition();
-                        // check if position is valid
-                        if(position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
+            deployBut.setOnClickListener(v -> {
+                if(listener != null) {
+                    int position = getAdapterPosition();
+                    // check if position is valid
+                    if(position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
                     }
                 }
             });

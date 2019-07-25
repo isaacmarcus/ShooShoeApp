@@ -66,6 +66,18 @@
                 android:text="Shelf #1"
                 android:textStyle="normal" />
 
+            <TextView
+            android:id="@+id/textViewDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textViewShelfId"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="3dp"
+            android:layout_toRightOf="@id/imageView"
+            app:fontFamily="@font/samsungone400"
+            android:text="12/12/19"
+            android:textStyle="normal" />
+
             <Button
                 android:id="@+id/deployButton"
                 android:layout_width="wrap_content"

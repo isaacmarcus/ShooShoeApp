@@ -47,15 +47,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
             deployBut = itemView.findViewById(R.id.deployButton);
 
             // WORKING
-            deployBut.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if(listener != null) {
-                        int position = getAdapterPosition();
-                        // check if position is valid
-                        if(position != RecyclerView.NO_POSITION) {
-                            listener.onItemClick(position);
-                        }
+            deployBut.setOnClickListener(v -> {
+                if(listener != null) {
+                    int position = getAdapterPosition();
+                    // check if position is valid
+                    if(position != RecyclerView.NO_POSITION) {
+                        listener.onItemClick(position);
                     }
                 }
             });

@@ -132,22 +132,23 @@
                 </RelativeLayout>
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/buttonsCard"
+            <HorizontalScrollView
+                android:id="@+id/buttonsScroll"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/recommendCard"
+                android:layout_marginHorizontal="12dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="15dp"
-                card_view:cardBackgroundColor="@android:color/transparent"
-                card_view:cardElevation="0dp"
+                android:scrollbars="none"
                 >
 
                 <RelativeLayout
                     android:id="@+id/buttonsHolder"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center">
+                    android:layout_margin="5dp"
+                    >
 
                     <LinearLayout
                         android:id ="@+id/favButt"
@@ -158,21 +159,23 @@
                         android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:background="@drawable/sandal_icon"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/favourites_icon"
                             android:clickable="false"
+                            android:layout_gravity="center"
                             />
 
                         <TextView
                             android:id="@+id/favButtTextView"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
                             android:text="Favourites"
                             app:fontFamily="@font/samsungone400"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                            android:textColor="#000000"/>
+                            android:textColor="#000000"
+                            android:maxLines="1"/>
                     </LinearLayout>
 
 
@@ -188,16 +191,18 @@
                         android:layout_toEndOf="@+id/favButt">
 
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:background="@drawable/sneaker_icon"
                             android:clickable="false"
+                            android:layout_gravity="center"
                             />
 
                         <TextView
                             android:id="@+id/sneakerButtTextView"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_gravity="center"
                             android:textAlignment="center"
                             android:text="Sneakers"
                             app:fontFamily="@font/samsungone400"
@@ -217,17 +222,19 @@
                         android:layout_toEndOf="@+id/sneakerButt">
 
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:background="@drawable/formal_icon"
                             android:clickable="false"
+                            android:layout_gravity="center"
                             />
 
                         <TextView
                             android:id="@+id/formalButtTextView"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
+                            android:layout_gravity="center"
                             android:text="Formals"
                             app:fontFamily="@font/samsungone400"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
@@ -238,35 +245,66 @@
                         android:id ="@+id/slipperButt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
                         android:layout_toRightOf="@+id/formalButt"
                         android:orientation="vertical">
 
                         <ImageView
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
                             android:background="@drawable/slipper_icon"
                             android:clickable="false"
+                            android:layout_gravity="center"
                             />
 
                         <TextView
                             android:id="@+id/slipperButtTextView"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:textAlignment="center"
+                            android:layout_gravity="center"
                             android:text="Slippers"
                             app:fontFamily="@font/samsungone400"
                             android:textAppearance="@style/TextAppearance.AppCompat.Small"
                             android:textColor="#000000"/>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:id ="@+id/sandalButt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_toRightOf="@+id/slipperButt"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:background="@drawable/sandal_icon"
+                            android:clickable="false"
+                            android:layout_gravity="center"
+                            />
+
+                        <TextView
+                            android:id="@+id/sandalButtTextView"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="center"
+                            android:layout_gravity="center"
+                            android:text="Sandals"
+                            app:fontFamily="@font/samsungone400"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                            android:textColor="#000000"/>
+                    </LinearLayout>
+
                 </RelativeLayout>
-            </android.support.v7.widget.CardView>
+            </HorizontalScrollView>
 
             <TextView
                 android:id="@+id/favouritesRec1TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/buttonsCard"
+                android:layout_below="@+id/buttonsScroll"
                 android:layout_marginTop="10dp"
                 android:layout_marginLeft="15dp"
                 android:text="These are your "
@@ -279,7 +317,7 @@
                 android:id="@+id/favouritesRec2TextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/buttonsCard"
+                android:layout_below="@+id/buttonsScroll"
                 android:layout_toRightOf="@+id/favouritesRec1TextView"
                 android:layout_marginTop="10dp"
                 android:text="favourites"

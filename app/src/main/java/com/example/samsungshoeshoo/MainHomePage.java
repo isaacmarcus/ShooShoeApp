@@ -64,6 +64,7 @@ public class MainHomePage extends AppCompatActivity {
         LinearLayout sneakerButt = findViewById(R.id.sneakerButt);
         LinearLayout formalButt = findViewById(R.id.formalButt);
         LinearLayout slipperButt = findViewById(R.id.slipperButt);
+        LinearLayout sandalButt = findViewById(R.id.sandalButt);
 
         // Build pull down to refresh view
         SwipeRefreshLayout pullToRefresh = findViewById(R.id.pullToRefreshHome);
@@ -111,6 +112,11 @@ public class MainHomePage extends AppCompatActivity {
         slipperButt.setOnClickListener(v -> {
             Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
             main_intent.putExtra("category","Slippers");
+            startActivity(main_intent);
+        });
+        sandalButt.setOnClickListener(v -> {
+            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            main_intent.putExtra("category","Sandals");
             startActivity(main_intent);
         });
 
@@ -213,20 +219,8 @@ public class MainHomePage extends AppCompatActivity {
                             case "Favourites":
                                 currentItemList.add(item);
                                 break;
-                            case "Sneakers":
+                            case "Extras":
                                 if(item.getType().equals("sneakers")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            case "Formal":
-                                if(item.getType().equals("formal")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            case "Slippers":
-                                if(item.getType().equals("slippers")) {
                                     currentItemList.add(item);
                                 } else {
                                     break;
@@ -267,7 +261,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "white",
                         "Johny",
-                        "white_sneakers_m02"));
+                        "white_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
 
         itemList.add(
@@ -276,7 +271,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "black",
                         "Chrissy",
-                        "black_sneakers_m04"));
+                        "black_sneakers_m04",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -284,7 +280,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -292,7 +289,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "red",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -300,7 +298,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "blue",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -308,7 +307,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -316,7 +316,8 @@ public class MainHomePage extends AppCompatActivity {
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
     }
 
     private void AdjustSizing() {
@@ -355,7 +356,6 @@ public class MainHomePage extends AppCompatActivity {
     public int getScreenWidth() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-//        int height = displayMetrics.heightPixels;
         int width = displayMetrics.widthPixels;
         return width;
     }

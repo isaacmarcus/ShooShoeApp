@@ -217,6 +217,8 @@ public class MainActivity extends AppCompatActivity
             currentCategory = "Formals";
         } else if (id == R.id.nav_slippers) {
             currentCategory = "Slippers";
+        } else if (id == R.id.nav_sandals) {
+            currentCategory = "Sandals";
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
@@ -275,6 +277,12 @@ public class MainActivity extends AppCompatActivity
                                 } else {
                                     break;
                                 }
+                            case "Sandals":
+                                if(item.getType().equals("sandals")) {
+                                    currentItemList.add(item);
+                                } else {
+                                    break;
+                                }
                             default:
                                 break;
                         }
@@ -312,7 +320,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "white",
                         "Johny",
-                        "white_sneakers_m02"));
+                        "white_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
 
         itemList.add(
@@ -321,7 +330,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "black",
                         "Chrissy",
-                        "black_sneakers_m04"));
+                        "black_sneakers_m04",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -329,7 +339,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -337,7 +348,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "red",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -345,7 +357,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "blue",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -353,7 +366,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
 
         itemList.add(
                 new ListItem(
@@ -361,7 +375,8 @@ public class MainActivity extends AppCompatActivity
                         "sneaker",
                         "grey",
                         "Teagen",
-                        "grey_sneakers_m02"));
+                        "grey_sneakers_m02",
+                        "Thu Jul 25 13:30:42 2019"));
     }
 
 }

@@ -4,20 +4,20 @@ public class ListItem {
 
     private int shelfId;
     private int occ;
-    private String type, colour, owner;
-    private String image;
+    private String type, colour, owner, date, image;
 
     public ListItem() {
 
     }
 
-    public ListItem(int shelfId, int occ, String type, String colour, String owner, String image) {
+    public ListItem(int shelfId, int occ, String type, String colour, String owner, String image, String date) {
         this.shelfId = shelfId;
         this.occ = occ;
         this.type = type;
         this.colour = colour;
         this.owner = owner;
         this.image = image;
+        this.date = date;
     }
 
     public int getShelfId() {
@@ -44,6 +44,10 @@ public class ListItem {
         return image;
     }
 
+    public String getDate() {
+        return date;
+    }
+
 
     public void setShelfId(int shelfId) {
         this.shelfId = shelfId;
@@ -67,6 +71,10 @@ public class ListItem {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
 }
