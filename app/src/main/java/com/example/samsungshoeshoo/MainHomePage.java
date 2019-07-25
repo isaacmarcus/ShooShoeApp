@@ -50,8 +50,9 @@ public class MainHomePage extends AppCompatActivity {
     private List<ListItem> extraItemList;
 
     // Sizing variables
-    private static final float CARD_SIZE_RATIO = 0.7f;
     private static final float IMAGE_SIZE_RATIO = 0.27f;
+    public static int screenWidth = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -325,7 +326,7 @@ public class MainHomePage extends AppCompatActivity {
         ImageView recImgView3 = findViewById(R.id.recImgView3);
 
         // Get the actual screen width
-        int screenWidth = getScreenWidth();
+        screenWidth = getScreenWidth();
         // Calculate the new image size
         int imageViewSize = (int) ((float) screenWidth * IMAGE_SIZE_RATIO);
         // Calculate the margin

@@ -19,6 +19,8 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
     private List<ListItem> itemList; // list to contain items in adapter
     private OnItemClickListener mListener;
 
+    private static final float CARD_SIZE_RATIO = 0.75f; // ratio for resizing card
+
     // interface to communicate with main activity
     public interface OnItemClickListener {
         void onItemClick(int position);
@@ -78,6 +80,12 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.list_item, null);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        // Get the screen width
+        int screenWidth = MainHomePage.screenWidth;
+        // Calculate the new recycler view size
+        int cardViewSize = (int) ((float) screenWidth * CARD_SIZE_RATIO);
+        // set the new recycler view size
+        lp.width = cardViewSize;
         view.setLayoutParams(lp);
         return new itemViewHolder(view, mListener);
     }
@@ -90,6 +98,8 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
     @Override
     public void onBindViewHolder(@NonNull itemViewHolder itemViewHolder, int position) {
         ListItem item = itemList.get(position);
+
+        // set text views based on data received
         itemViewHolder.textViewType.setText(Capitalize(item.getType()));
         itemViewHolder.textViewColour.setText(Capitalize(item.getColour()));
         itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
@@ -111,7 +121,5 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
 
 
     }
-
-
 
 }
