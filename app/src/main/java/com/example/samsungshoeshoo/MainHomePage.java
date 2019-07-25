@@ -9,9 +9,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -36,13 +39,19 @@ public class MainHomePage extends AppCompatActivity {
     private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
     private String postUrl="http://10.12.0.18:8100/location";
 
+    // Setting up recycler view for favourites
     private RecyclerView favouritesRecyclerView;
-    private MyAdapter favouritesAdapter;
+    private MyHomeAdapter favouritesAdapter;
     private List<ListItem> favouritesItemList;
 
+    // Setting up recycler view for extras
     private RecyclerView extraRecyclerView;
-    private MyAdapter extraAdapter;
+    private MyHomeAdapter extraAdapter;
     private List<ListItem> extraItemList;
+
+    // Sizing variables
+    private static final float CARD_SIZE_RATIO = 0.7f;
+    private static final float IMAGE_SIZE_RATIO = 0.27f;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -104,23 +113,11 @@ public class MainHomePage extends AppCompatActivity {
             startActivity(main_intent);
         });
 
-        // find temperature text view
-        TextView tempTextView = findViewById(R.id.tempTextView);
-        // Adjust Text View of temperature to include padding at top of status bar height
-        ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            params.topMargin = insets.getSystemWindowInsetTop();
-            return insets.consumeSystemWindowInsets();
-        });
-
-        ViewCompat.setOnApplyWindowInsetsListener(extraRecyclerView, (v, insets) -> {
-            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            params.bottomMargin = insets.getSystemWindowInsetBottom();
-            return insets.consumeSystemWindowInsets();
-        });
+        // Method for adjusting items in page based on screen size
+        AdjustSizing();
     }
 
-    public void deployItem(int position, MyAdapter adapter, List<ListItem> itemList) {
+    public void deployItem(int position, MyHomeAdapter adapter, List<ListItem> itemList) {
         // Send Post Data
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Deploying Shoe...");
@@ -175,8 +172,8 @@ public class MainHomePage extends AppCompatActivity {
         extraItemList = new ArrayList<>();
 
         //creating recycler view adapter
-        favouritesAdapter = new MyAdapter(this, favouritesItemList);
-        extraAdapter = new MyAdapter(this, extraItemList);
+        favouritesAdapter = new MyHomeAdapter(this, favouritesItemList);
+        extraAdapter = new MyHomeAdapter(this, extraItemList);
 
         // Get Database and update adapter
         updatePage();
@@ -187,7 +184,7 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     // method to parse Data and attach to List
-    private void getData(String currentCategory, List<ListItem> itemList) {
+    private void getData(String currentCategory, MyHomeAdapter adapter, List<ListItem> itemList) {
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
@@ -243,7 +240,7 @@ public class MainHomePage extends AppCompatActivity {
 
                 itemList.clear(); // empty itemList before putting items in it
                 itemList.addAll(currentItemList);
-//                adapter.notifyDataSetChanged();
+                adapter.notifyDataSetChanged();
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -319,6 +316,55 @@ public class MainHomePage extends AppCompatActivity {
                         "grey",
                         "Teagen",
                         "grey_sneakers_m02"));
+    }
+
+    private void AdjustSizing() {
+        // Find Image Views for Recommended shoes
+        ImageView recImgView1 = findViewById(R.id.recImgView1);
+        ImageView recImgView2 = findViewById(R.id.recImgView2);
+        ImageView recImgView3 = findViewById(R.id.recImgView3);
+
+        // Get the actual screen width
+        int screenWidth = getScreenWidth();
+        // Calculate the new image size
+        int imageViewSize = (int) ((float) screenWidth * IMAGE_SIZE_RATIO);
+        // Calculate the margin
+        int margin = (screenWidth - imageViewSize) / 2;
+
+        // Call method to set image sizes for image views
+        SetImgSize(recImgView1,imageViewSize);
+        SetImgSize(recImgView2,imageViewSize);
+        SetImgSize(recImgView3,imageViewSize);
+
+        // find temperature text view
+        TextView tempTextView = findViewById(R.id.tempTextView);
+        // Adjust Text View of temperature to include padding at top of status bar height
+        ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            params.topMargin = insets.getSystemWindowInsetTop();
+            return insets.consumeSystemWindowInsets();
+        });
+        ViewCompat.setOnApplyWindowInsetsListener(extraRecyclerView, (v, insets) -> {
+            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+            params.bottomMargin = insets.getSystemWindowInsetBottom();
+            return insets.consumeSystemWindowInsets();
+        });
+    }
+
+    public int getScreenWidth() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+//        int height = displayMetrics.heightPixels;
+        int width = displayMetrics.widthPixels;
+        return width;
+    }
+
+    private void SetImgSize(ImageView imgView, int imgViewSize) {
+        // Set the Image size
+        RelativeLayout.LayoutParams recImgView1LayoutParams = (RelativeLayout.LayoutParams) imgView.getLayoutParams();
+        // Setting the same size for Width and height
+        recImgView1LayoutParams.height = imgViewSize;
+        recImgView1LayoutParams.width = imgViewSize;
     }
 
 

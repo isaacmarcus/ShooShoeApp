@@ -11,6 +11,7 @@
         android:id="@+id/homeScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbars="none"
         >
 
         <RelativeLayout
@@ -156,7 +157,7 @@
                         android:orientation="vertical"
                         android:layout_marginEnd="@dimen/activity_horizontal_margin">
 
-                        <Button
+                        <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/sandal_icon"
@@ -186,7 +187,7 @@
                         android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_toEndOf="@+id/favButt">
 
-                        <Button
+                        <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/sneaker_icon"
@@ -215,7 +216,7 @@
                         android:layout_marginEnd="@dimen/activity_horizontal_margin"
                         android:layout_toEndOf="@+id/sneakerButt">
 
-                        <Button
+                        <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/formal_icon"
@@ -240,7 +241,7 @@
                         android:layout_toRightOf="@+id/formalButt"
                         android:orientation="vertical">
 
-                        <Button
+                        <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
                             android:background="@drawable/slipper_icon"
