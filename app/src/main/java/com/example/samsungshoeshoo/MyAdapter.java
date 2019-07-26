@@ -35,7 +35,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
     public static class itemViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
-        TextView textViewType, textViewColour, textViewShelfId;
+        TextView textViewType, textViewColour, textViewDate;
         Button deployBut;
 
         itemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
@@ -43,7 +43,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
             imageView = itemView.findViewById(R.id.imageView);
             textViewType = itemView.findViewById(R.id.textViewType);
             textViewColour = itemView.findViewById(R.id.textViewColour);
-            textViewShelfId = itemView.findViewById(R.id.textViewShelfId);
+//            textViewShelfId = itemView.findViewById(R.id.textViewShelfId);
+            textViewDate = itemView.findViewById(R.id.textViewDate);
             deployBut = itemView.findViewById(R.id.deployButton);
 
             // WORKING
@@ -90,7 +91,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         ListItem item = itemList.get(position);
         itemViewHolder.textViewType.setText(Capitalize(item.getType()));
         itemViewHolder.textViewColour.setText(Capitalize(item.getColour()));
-        itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
+        itemViewHolder.textViewDate.setText("Stored " + item.getDate() + " days ago");
+        //        itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
 
         // For local testing of img
 //        Context context = itemViewHolder.imageView.getContext();

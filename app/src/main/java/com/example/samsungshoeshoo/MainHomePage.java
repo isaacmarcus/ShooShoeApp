@@ -22,11 +22,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainHomePage extends AppCompatActivity {
@@ -153,9 +158,10 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     private void updatePage() {
-//        getData();
-        getDataLocal(favouritesItemList);
-        getDataLocal(extraItemList);
+//        getData("Favourites",favouritesAdapter,favouritesItemList);
+//        getData("Extras",extraAdapter,extraItemList);
+        getDataLocal("Favourites",favouritesItemList);
+        getDataLocal("Extras",extraItemList);
         favouritesAdapter.notifyDataSetChanged();
         extraAdapter.notifyDataSetChanged();
     }
@@ -213,24 +219,26 @@ public class MainHomePage extends AppCompatActivity {
                         item.setColour(jsonObject.getString("colour"));
                         item.setOwner(jsonObject.getString("owner"));
                         item.setImage(jsonObject.getString("img"));
-
-                        // switch case to add based on current category selected
-                        switch(currentCategory) {
-                            case "Favourites":
-                                currentItemList.add(item);
-                                break;
-                            case "Extras":
-                                if(item.getType().equals("sneakers")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
+                        item.setDate(daysAgo(jsonObject.getString("timeStored")));
 
                     }
 
+                }
+
+                // switch case to add based on current category selected
+                switch(currentCategory) {
+                    case "Favourites":
+                        Collections.sort(
+                                currentItemList,
+                                (item1, item2) -> item1.getDate() - item2.getDate());
+                        break;
+                    case "Extras":
+                        Collections.sort(
+                                currentItemList,
+                                (item1, item2) -> item2.getDate() - item1.getDate());
+                        break;
+                    default:
+                        break;
                 }
 
                 itemList.clear(); // empty itemList before putting items in it
@@ -253,7 +261,7 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     // Method to mock database, while testing offline
-    private void getDataLocal(List<ListItem> itemList) {
+    private void getDataLocal(String currentCategory, List<ListItem> itemList) {
         itemList.clear();
         itemList.add(
                 new ListItem(
@@ -262,7 +270,7 @@ public class MainHomePage extends AppCompatActivity {
                         "white",
                         "Johny",
                         "white_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
+                        daysAgo("Tue Jul 23 13:30:42 2019")));
 
 
         itemList.add(
@@ -272,7 +280,7 @@ public class MainHomePage extends AppCompatActivity {
                         "black",
                         "Chrissy",
                         "black_sneakers_m04",
-                        "Thu Jul 25 13:30:42 2019"));
+                        daysAgo("Thu Jul 25 13:30:42 2019")));
 
         itemList.add(
                 new ListItem(
@@ -281,43 +289,57 @@ public class MainHomePage extends AppCompatActivity {
                         "grey",
                         "Teagen",
                         "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
+                        daysAgo("Wed Jul 24 13:30:42 2019")));
 
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "red",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "blue",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "grey",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "grey",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
+//        itemList.add(
+//                new ListItem(
+//                        1, 1,
+//                        "sneaker",
+//                        "red",
+//                        "Teagen",
+//                        "grey_sneakers_m02",
+//                        "Thu Jul 25 13:30:42 2019"));
+//
+//        itemList.add(
+//                new ListItem(
+//                        1, 1,
+//                        "sneaker",
+//                        "blue",
+//                        "Teagen",
+//                        "grey_sneakers_m02",
+//                        "Thu Jul 25 13:30:42 2019"));
+//
+//        itemList.add(
+//                new ListItem(
+//                        1, 1,
+//                        "sneaker",
+//                        "grey",
+//                        "Teagen",
+//                        "grey_sneakers_m02",
+//                        "Thu Jul 25 13:30:42 2019"));
+//
+//        itemList.add(
+//                new ListItem(
+//                        1, 1,
+//                        "sneaker",
+//                        "grey",
+//                        "Teagen",
+//                        "grey_sneakers_m02",
+//                        "Thu Jul 25 13:30:42 2019"));
+        switch(currentCategory) {
+            case "Favourites":
+                Collections.sort(
+                        itemList,
+                        (item1, item2) -> item1.getDate() - item2.getDate());
+                break;
+            case "Extras":
+                Collections.sort(
+                        itemList,
+                        (item1, item2) -> item2.getDate() - item1.getDate());
+                break;
+            default:
+                break;
+        }
     }
 
     private void AdjustSizing() {
@@ -368,5 +390,18 @@ public class MainHomePage extends AppCompatActivity {
         recImgView1LayoutParams.width = imgViewSize;
     }
 
+    public static int daysAgo(String oldDate) {
+        // get and convert old date from String to Date format
+        // Thu Jul 25 13:30:42 2019
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("EEE MMM dd HH:mm:ss yyyy");
+        DateTime startDate = formatter.parseDateTime(oldDate);
+
+        // get current date
+        DateTime endDate = new DateTime();
+
+        // calculate days ago
+        int days = Days.daysBetween(startDate, endDate).getDays();
+        return days;
+    }
 
 }

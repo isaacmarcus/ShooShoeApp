@@ -4,13 +4,14 @@ public class ListItem {
 
     private int shelfId;
     private int occ;
-    private String type, colour, owner, date, image;
+    private String type, colour, owner, image;
+    private int date;
 
     public ListItem() {
 
     }
 
-    public ListItem(int shelfId, int occ, String type, String colour, String owner, String image, String date) {
+    public ListItem(int shelfId, int occ, String type, String colour, String owner, String image, int date) {
         this.shelfId = shelfId;
         this.occ = occ;
         this.type = type;
@@ -44,7 +45,7 @@ public class ListItem {
         return image;
     }
 
-    public String getDate() {
+    public int getDate() {
         return date;
     }
 
@@ -73,7 +74,7 @@ public class ListItem {
         this.image = image;
     }
 
-    public void setDate(String date) {
+    public void setDate(int date) {
         this.date = date;
     }
 

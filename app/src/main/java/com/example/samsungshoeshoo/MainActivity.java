@@ -26,6 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity
@@ -253,11 +254,15 @@ public class MainActivity extends AppCompatActivity
                         item.setColour(jsonObject.getString("colour"));
                         item.setOwner(jsonObject.getString("owner"));
                         item.setImage(jsonObject.getString("img"));
+                        item.setDate(Integer.parseInt(jsonObject.getString("timeStored")));
 
                         // switch case to add based on current category selected
                         switch(currentCategory) {
                             case "Favourites":
                                 currentItemList.add(item);
+                                Collections.sort(
+                                        currentItemList,
+                                        (item1, item2) -> item1.getDate() - item2.getDate());
                                 break;
                             case "Sneakers":
                                 if(item.getType().equals("sneakers")) {
@@ -321,7 +326,7 @@ public class MainActivity extends AppCompatActivity
                         "white",
                         "Johny",
                         "white_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
+                        MainHomePage.daysAgo("Tue Jul 23 13:30:42 2019")));
 
 
         itemList.add(
@@ -331,7 +336,7 @@ public class MainActivity extends AppCompatActivity
                         "black",
                         "Chrissy",
                         "black_sneakers_m04",
-                        "Thu Jul 25 13:30:42 2019"));
+                        MainHomePage.daysAgo("Thu Jul 25 13:30:42 2019")));
 
         itemList.add(
                 new ListItem(
@@ -340,43 +345,7 @@ public class MainActivity extends AppCompatActivity
                         "grey",
                         "Teagen",
                         "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "red",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "blue",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "grey",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
-
-        itemList.add(
-                new ListItem(
-                        1, 1,
-                        "sneaker",
-                        "grey",
-                        "Teagen",
-                        "grey_sneakers_m02",
-                        "Thu Jul 25 13:30:42 2019"));
+                        MainHomePage.daysAgo("Thu Jul 25 13:30:42 2019")));
     }
 
 }
