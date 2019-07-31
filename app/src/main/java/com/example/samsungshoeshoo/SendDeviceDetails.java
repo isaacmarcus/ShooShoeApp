@@ -14,8 +14,7 @@ import java.net.URL;
 
 public class SendDeviceDetails extends AsyncTask<String, Void, String> {
 
-    public String resResponse;
-
+    // method to run and send device details to RPI
     @Override
     protected String doInBackground(String... params) {
 
@@ -61,7 +60,6 @@ public class SendDeviceDetails extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
-//        delegate.processFinish(result); // call interface to send response from server to main activity
         Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         try{
             JSONObject jsonResponse = new JSONObject(result);
@@ -70,16 +68,5 @@ public class SendDeviceDetails extends AsyncTask<String, Void, String> {
             Log.d("Error", err.toString());
         }
     }
-
-    // interface to send data from post response to main activity
-    public interface AsyncResponse {
-        void processFinish(String output);
-    }
-
-    public AsyncResponse delegate = null;
-
-//    public SendDeviceDetails(AsyncResponse delegate){
-//        this.delegate = delegate;
-//    }
 
 }

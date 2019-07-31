@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -33,6 +34,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainHomePage extends AppCompatActivity {
 
@@ -142,26 +144,36 @@ public class MainHomePage extends AppCompatActivity {
 
             // execute AsyncTask to send post data to http server as JSONObject in string format
             SendDeviceDetails sDD = new SendDeviceDetails();
-            sDD.execute(postUrl, postData.toString());
+            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
+            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
+            progressDialog.dismiss();
+
+            if (deployResponse.equals("true")) {
+                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+                itemList.remove(position);
+                adapter.notifyItemRemoved(position);
+            } else if (deployResponse.equals("false")) {
+                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+            }
 
             progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
             progressDialog.dismiss();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
         }
-
-        //TODO: Add if statement for if message received from post is successful
-
-        // Remove item if successfully deployed
-        itemList.remove(position);
-        adapter.notifyItemRemoved(position);
     }
 
     private void updatePage() {
-//        getData("Favourites",favouritesAdapter,favouritesItemList);
-//        getData("Extras",extraAdapter,extraItemList);
-        getDataLocal("Favourites",favouritesItemList);
-        getDataLocal("Extras",extraItemList);
+        getData("Favourites", favouritesAdapter, favouritesItemList);
+        getData("Extras", extraAdapter, extraItemList);
+//        getDataLocal("Favourites",favouritesItemList);
+//        getDataLocal("Extras",extraItemList);
         favouritesAdapter.notifyDataSetChanged();
         extraAdapter.notifyDataSetChanged();
     }
@@ -221,6 +233,7 @@ public class MainHomePage extends AppCompatActivity {
                         item.setImage(jsonObject.getString("img"));
                         item.setDate(daysAgo(jsonObject.getString("timeStored")));
 
+                        currentItemList.add(item);
                     }
 
                 }
@@ -394,6 +407,7 @@ public class MainHomePage extends AppCompatActivity {
         // get and convert old date from String to Date format
         // Thu Jul 25 13:30:42 2019
         DateTimeFormatter formatter = DateTimeFormat.forPattern("EEE MMM dd HH:mm:ss yyyy");
+        Log.e(oldDate,"date received");
         DateTime startDate = formatter.parseDateTime(oldDate);
 
         // get current date

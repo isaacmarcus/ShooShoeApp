@@ -12,7 +12,7 @@
             />
         <item
             android:id="@+id/nav_sneakers"
-            android:icon="@drawable/sneaker_icon"
+            android:icon="@mipmap/sneaker_icon"
             android:title="@string/menu_sneakers" />
         <item
             android:id="@+id/nav_formal"

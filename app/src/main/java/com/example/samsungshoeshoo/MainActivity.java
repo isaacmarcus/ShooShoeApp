@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -28,17 +29,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     // Mock http from laptop
-//    private String url="http://10.12.156.149:8100/shoes";
-//    private String postUrl="http://10.12.156.149:8100/location";
+    private String url="http://10.12.156.149:8100/shoes";
+    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
-    private String postUrl="http://10.12.0.18:8100/location";
+//    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
+//    private String postUrl="http://10.12.0.18:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
 
@@ -117,26 +119,37 @@ public class MainActivity extends AppCompatActivity
         progressDialog.show();
 
         JSONObject postData = new JSONObject();
+//        String deployResponse;
         try {
             // PUT postData required to be received by server in JSON Format
             postData.put("shelfIndex", itemList.get(position).getShelfId());
 
-            // execute AsyncTask to send post data to http server as JSONObject in string format
+            // execute async Task to send post data to http server as JSONObject in string format
             SendDeviceDetails sDD = new SendDeviceDetails();
-            sDD.execute(postUrl, postData.toString());
-
+            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
+            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
             progressDialog.dismiss();
+
+            if (deployResponse.equals("true")) {
+                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+                itemList.remove(position);
+                adapter.notifyItemRemoved(position);
+            } else if (deployResponse.equals("false")) {
+                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
             progressDialog.dismiss();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
         }
-
-        //TODO: Add if statement for if message received from post is successful
-
-        // Remove item if successfully deployed
-        itemList.remove(position);
-        adapter.notifyItemRemoved(position);
     }
+
 
     public void buildRecyclerView() {
         //**
@@ -254,7 +267,7 @@ public class MainActivity extends AppCompatActivity
                         item.setColour(jsonObject.getString("colour"));
                         item.setOwner(jsonObject.getString("owner"));
                         item.setImage(jsonObject.getString("img"));
-                        item.setDate(Integer.parseInt(jsonObject.getString("timeStored")));
+                        item.setDate(MainHomePage.daysAgo(jsonObject.getString("timeStored")));
 
                         // switch case to add based on current category selected
                         switch(currentCategory) {
@@ -302,12 +315,9 @@ public class MainActivity extends AppCompatActivity
 
             } catch (JSONException e) {
                 e.printStackTrace();
-//                    progressDialog.dismiss();
             }
-//                progressDialog.dismiss();
         }, error -> {
             Log.e("Volley",error.toString());
-//                progressDialog.dismiss();
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
@@ -347,5 +357,4 @@ public class MainActivity extends AppCompatActivity
                         "grey_sneakers_m02",
                         MainHomePage.daysAgo("Thu Jul 25 13:30:42 2019")));
     }
-
 }
