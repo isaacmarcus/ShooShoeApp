@@ -7,7 +7,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_favourites"
-            android:icon="@drawable/favourites_icon"
+            android:icon="@mipmap/favourites_icon"
             android:title="@string/menu_favourites"
             />
         <item
@@ -16,29 +16,29 @@
             android:title="@string/menu_sneakers" />
         <item
             android:id="@+id/nav_formal"
-            android:icon="@drawable/formal_icon"
+            android:icon="@mipmap/formal_icon"
             android:title="@string/menu_formal" />
         <item
             android:id="@+id/nav_slippers"
-            android:icon="@drawable/slipper_icon"
+            android:icon="@mipmap/slipper_icon"
             android:title="@string/menu_slippers" />
         <item
             android:id="@+id/nav_sandals"
-            android:icon="@drawable/sandal_icon"
-            android:title="@string/menu_slippers" />
+            android:icon="@mipmap/sandal_icon"
+            android:title="@string/menu_sandals" />
     </group>
 
-    <item android:title="Social Media">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="@string/menu_share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="@string/menu_send" />
-        </menu>
-    </item>
+    <!--<item android:title="Social Media">-->
+        <!--<menu>-->
+            <!--<item-->
+                <!--android:id="@+id/nav_share"-->
+                <!--android:icon="@drawable/ic_menu_share"-->
+                <!--android:title="@string/menu_share" />-->
+            <!--<item-->
+                <!--android:id="@+id/nav_send"-->
+                <!--android:icon="@drawable/ic_menu_send"-->
+                <!--android:title="@string/menu_send" />-->
+        <!--</menu>-->
+    <!--</item>-->
 
 </menu>

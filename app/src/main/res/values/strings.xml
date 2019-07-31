@@ -11,6 +11,7 @@
     <string name="menu_sneakers">Sneakers</string>
     <string name="menu_formal">Formal</string>
     <string name="menu_slippers">Slippers</string>
+    <string name="menu_sandals">Sandals</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 </resources>

@@ -233,11 +233,12 @@ public class MainActivity extends AppCompatActivity
             currentCategory = "Slippers";
         } else if (id == R.id.nav_sandals) {
             currentCategory = "Sandals";
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
+//        } else if (id == R.id.nav_share) {
+//
+//        } else if (id == R.id.nav_send) {
+//
+//        }
         updateRecyclerView();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -245,7 +246,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     // method to parse Data and attach to List
-    private void getData() {
+    private void getData(){
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
@@ -357,4 +358,6 @@ public class MainActivity extends AppCompatActivity
                         "grey_sneakers_m02",
                         MainHomePage.daysAgo("Thu Jul 25 13:30:42 2019")));
     }
+
 }
+

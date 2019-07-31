@@ -161,7 +161,7 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/favourites_icon"
+                            android:background="@mipmap/favourites_icon"
                             android:clickable="false"
                             android:layout_gravity="center"
                             />
@@ -193,7 +193,7 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/sneaker_icon"
+                            android:background="@mipmap/sneaker_icon"
                             android:clickable="false"
                             android:layout_gravity="center"
                             />
@@ -224,7 +224,7 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/formal_icon"
+                            android:background="@mipmap/formal_icon"
                             android:clickable="false"
                             android:layout_gravity="center"
                             />
@@ -252,7 +252,7 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/slipper_icon"
+                            android:background="@mipmap/slipper_icon"
                             android:clickable="false"
                             android:layout_gravity="center"
                             />
@@ -280,7 +280,7 @@
                         <ImageView
                             android:layout_width="60dp"
                             android:layout_height="60dp"
-                            android:background="@drawable/sandal_icon"
+                            android:background="@mipmap/sandal_icon"
                             android:clickable="false"
                             android:layout_gravity="center"
                             />
