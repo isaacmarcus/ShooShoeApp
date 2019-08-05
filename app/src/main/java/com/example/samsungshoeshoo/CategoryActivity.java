@@ -35,12 +35,12 @@ public class CategoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     // Mock http from laptop
-    private String url="http://10.12.156.149:8100/shoes";
-    private String postUrl="http://10.12.156.149:8100/location";
+//    private String url="http://10.12.156.149:8100/shoes";
+//    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-//    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
-//    private String postUrl="http://10.12.0.18:8100/location";
+    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
+    private String postUrl="http://10.12.0.18:8100/location";
     private RecyclerView recyclerView;
     private MyAdapter adapter;
 

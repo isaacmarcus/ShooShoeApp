@@ -2,6 +2,8 @@ package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -9,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -23,28 +26,28 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
-import org.joda.time.DateTime;
-import org.joda.time.Days;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.ExecutionException;
 
 public class MainHomePage extends AppCompatActivity {
 
     // Mock http from laptop
-    private String url="http://10.12.156.149:8100/shoes";
-    private String postUrl="http://10.12.156.149:8100/location";
+//    private String url="http://10.12.156.149:8100/shoes";
+//    private String postUrl="http://10.12.156.149:8100/location";
 
     // urls from RPI
-//    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
-//    private String postUrl="http://10.12.0.18:8100/location";
+    private String url="http://10.12.0.18:8100/shoes"; // raspberry pi url
+    private String postUrl="http://10.12.0.18:8100/location";
 
     // Setting up recycler view for favourites
     private RecyclerView favouritesRecyclerView;
@@ -55,6 +58,9 @@ public class MainHomePage extends AppCompatActivity {
     private RecyclerView extraRecyclerView;
     private MyHomeAdapter extraAdapter;
     private List<ListItem> extraItemList;
+
+    // Set up Recommended Img View Item List
+    private List<ListItem> recItemList;
 
     // Sizing variables
     private static final float IMAGE_SIZE_RATIO = 0.27f;
@@ -170,6 +176,7 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     private void updatePage() {
+        getDataRec(recItemList);
         getData("Favourites", favouritesAdapter, favouritesItemList);
         getData("Extras", extraAdapter, extraItemList);
 //        getDataLocal("Favourites",favouritesItemList);
@@ -195,6 +202,7 @@ public class MainHomePage extends AppCompatActivity {
         // initialize item list
         favouritesItemList = new ArrayList<>();
         extraItemList = new ArrayList<>();
+        recItemList = new ArrayList<>();
 
         //creating recycler view adapter
         favouritesAdapter = new MyHomeAdapter(this, favouritesItemList);
@@ -271,6 +279,81 @@ public class MainHomePage extends AppCompatActivity {
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
 
+    }
+
+    // method for getting and setting images for recommended shoes
+    private void getDataRec(List<ListItem> itemList) {
+        // Find Image Views for Recommended shoes
+        ImageView recImgView1 = findViewById(R.id.recImgView1);
+        ImageView recImgView2 = findViewById(R.id.recImgView2);
+        ImageView recImgView3 = findViewById(R.id.recImgView3);
+
+        // add to list of recommended image views
+        ArrayList<ImageView> recImgList = new ArrayList<>();
+        recImgList.add(recImgView1);
+        recImgList.add(recImgView2);
+        recImgList.add(recImgView3);
+
+        // Json Request
+        final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
+
+            try {
+                List<ListItem> currentItemList = new ArrayList<>();
+
+                JSONArray jsonArray = response.getJSONArray("data");
+                for(int i=0; i < jsonArray.length(); i++) {
+
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+                    // Add jsonObject only if the occupied field is 1
+                    if(jsonObject.getString("occ").equals("1") && (jsonObject.getString("colour").equals("black") || jsonObject.getString("type").equals("slippers"))) {
+                        ListItem item = new ListItem();
+                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
+                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
+                        item.setType(jsonObject.getString("type"));
+                        item.setColour(jsonObject.getString("colour"));
+                        item.setOwner(jsonObject.getString("owner"));
+                        item.setImage(jsonObject.getString("img"));
+                        item.setDate(daysAgo(jsonObject.getString("timeStored")));
+
+                        currentItemList.add(item);
+                    }
+
+                }
+
+//                // switch case to add based on current category selected
+//                switch(currentCategory) {
+//                    case "Rainy":
+//                        break;
+//                    default:
+//                        break;
+//                }
+
+                itemList.clear(); // empty itemList before putting items in it
+                itemList.addAll(currentItemList);
+
+
+                //TODO: add setting of first three list items to rec image views
+                for (int i = 0; i<3; i++) {
+                    try {
+                        byte[] decodedString = Base64.decode(itemList.get(i).getImage(), Base64.DEFAULT);
+                        Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                        recImgList.get(i).setImageBitmap(decodedImg);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                        Log.e("Image received in wrong format", itemList.get(i).getImage());
+                    }
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }, error -> {
+            Log.e("Volley",error.toString());
+        });
+
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+        requestQueue.add(jsonObjectRequest);
     }
 
     // Method to mock database, while testing offline
@@ -375,6 +458,7 @@ public class MainHomePage extends AppCompatActivity {
 
         // find temperature text view
         TextView tempTextView = findViewById(R.id.tempTextView);
+
         // Adjust Text View of temperature to include padding at top of status bar height
         ViewCompat.setOnApplyWindowInsetsListener(tempTextView, (v, insets) -> {
             ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
@@ -406,16 +490,19 @@ public class MainHomePage extends AppCompatActivity {
     public static int daysAgo(String oldDate) {
         // get and convert old date from String to Date format
         // Thu Jul 25 13:30:42 2019
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("EEE MMM dd HH:mm:ss yyyy");
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.US);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", Locale.US);
         Log.e(oldDate,"date received");
-        DateTime startDate = formatter.parseDateTime(oldDate);
+
+        // parse the date stored from database based on the formatter
+        LocalDate startDate = LocalDate.parse(oldDate, formatter);
 
         // get current date
-        DateTime endDate = new DateTime();
+        LocalDate endDate = LocalDate.now();
 
         // calculate days ago
-        int days = Days.daysBetween(startDate, endDate).getDays();
-        return days;
+        long days = ChronoUnit.DAYS.between(startDate, endDate);
+        return (Integer) (int) days;
     }
 
 }
