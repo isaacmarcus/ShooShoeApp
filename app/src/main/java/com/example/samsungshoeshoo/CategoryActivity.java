@@ -31,7 +31,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-public class MainActivity extends AppCompatActivity
+public class CategoryActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     // Mock http from laptop

@@ -102,27 +102,27 @@ public class MainHomePage extends AppCompatActivity {
 
         // on click listeners for categories to deploy page
         favButt.setOnClickListener(v -> {
-            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            Intent main_intent = new Intent(MainHomePage.this, CategoryActivity.class);
             main_intent.putExtra("category","Favourites");
             startActivity(main_intent);
         });
         sneakerButt.setOnClickListener(v -> {
-            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            Intent main_intent = new Intent(MainHomePage.this, CategoryActivity.class);
             main_intent.putExtra("category","Sneakers");
             startActivity(main_intent);
         });
         formalButt.setOnClickListener(v -> {
-            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            Intent main_intent = new Intent(MainHomePage.this, CategoryActivity.class);
             main_intent.putExtra("category","Formals");
             startActivity(main_intent);
         });
         slipperButt.setOnClickListener(v -> {
-            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            Intent main_intent = new Intent(MainHomePage.this, CategoryActivity.class);
             main_intent.putExtra("category","Slippers");
             startActivity(main_intent);
         });
         sandalButt.setOnClickListener(v -> {
-            Intent main_intent = new Intent(MainHomePage.this,MainActivity.class);
+            Intent main_intent = new Intent(MainHomePage.this, CategoryActivity.class);
             main_intent.putExtra("category","Sandals");
             startActivity(main_intent);
         });
