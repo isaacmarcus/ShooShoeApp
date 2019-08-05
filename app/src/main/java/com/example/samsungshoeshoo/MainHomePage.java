@@ -2,8 +2,6 @@ package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -11,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -60,6 +57,8 @@ public class MainHomePage extends AppCompatActivity {
     private List<ListItem> extraItemList;
 
     // Set up Recommended Img View Item List
+    private RecyclerView recRecyclerView;
+    private MyRecAdapter recAdapter;
     private List<ListItem> recItemList;
 
     // Sizing variables
@@ -105,6 +104,8 @@ public class MainHomePage extends AppCompatActivity {
         // on click listeners for deploy buttons
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
         extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
+        recAdapter.setOnItemClickListener(position -> deployRecItem(position, recAdapter, recItemList));
+
 
         // on click listeners for categories to deploy page
         favButt.setOnClickListener(v -> {
@@ -173,38 +174,86 @@ public class MainHomePage extends AppCompatActivity {
             e.printStackTrace();
             progressDialog.dismiss();
         }
+
+        updatePage();
+    }
+
+    public void deployRecItem(int position, MyRecAdapter adapter, List<ListItem> itemList) {
+        // Send Post Data
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Deploying Shoe...");
+        progressDialog.show();
+
+        JSONObject postData = new JSONObject();
+        try {
+            // PUT postData required to be received by server in JSON Format
+            postData.put("shelfIndex", itemList.get(position).getShelfId());
+
+            // execute AsyncTask to send post data to http server as JSONObject in string format
+            SendDeviceDetails sDD = new SendDeviceDetails();
+            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
+            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
+            progressDialog.dismiss();
+
+            if (deployResponse.equals("true")) {
+                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+                itemList.remove(position);
+                adapter.notifyItemRemoved(position);
+            } else if (deployResponse.equals("false")) {
+                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+            }
+
+            progressDialog.dismiss();
+        } catch (JSONException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+            progressDialog.dismiss();
+        }
+
+        updatePage();
     }
 
     private void updatePage() {
-        getDataRec(recItemList);
+        getDataRec(recAdapter, recItemList);
         getData("Favourites", favouritesAdapter, favouritesItemList);
         getData("Extras", extraAdapter, extraItemList);
 //        getDataLocal("Favourites",favouritesItemList);
 //        getDataLocal("Extras",extraItemList);
+        recAdapter.notifyDataSetChanged();
         favouritesAdapter.notifyDataSetChanged();
         extraAdapter.notifyDataSetChanged();
     }
 
+    // method to build recycler views
     public void buildRecyclerViews() {
         //**
         //
         // getting recycler view from xml
         //**
+        recRecyclerView = findViewById(R.id.recRecyclerView);
+        recRecyclerView.setHasFixedSize(true);
         favouritesRecyclerView = findViewById(R.id.favouritesRecyclerView);
         favouritesRecyclerView.setHasFixedSize(true);
         extraRecyclerView = findViewById(R.id.extraRecyclerView);
         extraRecyclerView.setHasFixedSize(true);
 
         // creating and setting horizontal linear layout managers for the recycler view
+        recRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         favouritesRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
         extraRecyclerView.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false));
 
         // initialize item list
+        recItemList = new ArrayList<>();
         favouritesItemList = new ArrayList<>();
         extraItemList = new ArrayList<>();
-        recItemList = new ArrayList<>();
 
         //creating recycler view adapter
+        recAdapter = new MyRecAdapter(this, recItemList);
         favouritesAdapter = new MyHomeAdapter(this, favouritesItemList);
         extraAdapter = new MyHomeAdapter(this, extraItemList);
 
@@ -212,6 +261,7 @@ public class MainHomePage extends AppCompatActivity {
         updatePage();
 
         //setting adapter to recycler
+        recRecyclerView.setAdapter(recAdapter);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
         extraRecyclerView.setAdapter(extraAdapter);
     }
@@ -282,17 +332,17 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     // method for getting and setting images for recommended shoes
-    private void getDataRec(List<ListItem> itemList) {
-        // Find Image Views for Recommended shoes
-        ImageView recImgView1 = findViewById(R.id.recImgView1);
-        ImageView recImgView2 = findViewById(R.id.recImgView2);
-        ImageView recImgView3 = findViewById(R.id.recImgView3);
-
-        // add to list of recommended image views
-        ArrayList<ImageView> recImgList = new ArrayList<>();
-        recImgList.add(recImgView1);
-        recImgList.add(recImgView2);
-        recImgList.add(recImgView3);
+    private void getDataRec(MyRecAdapter adapter, List<ListItem> itemList) {
+//        // Find Image Views for Recommended shoes
+//        ImageView recImgView1 = findViewById(R.id.recImgView1);
+//        ImageView recImgView2 = findViewById(R.id.recImgView2);
+//        ImageView recImgView3 = findViewById(R.id.recImgView3);
+//
+//        // add to list of recommended image views
+//        ArrayList<ImageView> recImgList = new ArrayList<>();
+//        recImgList.add(recImgView1);
+//        recImgList.add(recImgView2);
+//        recImgList.add(recImgView3);
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
@@ -305,7 +355,7 @@ public class MainHomePage extends AppCompatActivity {
 
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
 
-                    // Add jsonObject only if the occupied field is 1
+                    // Add jsonObject only if the occupied field is 1 / black / slipper
                     if(jsonObject.getString("occ").equals("1") && (jsonObject.getString("colour").equals("black") || jsonObject.getString("type").equals("slippers"))) {
                         ListItem item = new ListItem();
                         item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
@@ -321,29 +371,20 @@ public class MainHomePage extends AppCompatActivity {
 
                 }
 
-//                // switch case to add based on current category selected
-//                switch(currentCategory) {
-//                    case "Rainy":
-//                        break;
-//                    default:
-//                        break;
-//                }
-
                 itemList.clear(); // empty itemList before putting items in it
                 itemList.addAll(currentItemList);
+                adapter.notifyDataSetChanged();
 
-
-                //TODO: add setting of first three list items to rec image views
-                for (int i = 0; i<3; i++) {
-                    try {
-                        byte[] decodedString = Base64.decode(itemList.get(i).getImage(), Base64.DEFAULT);
-                        Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                        recImgList.get(i).setImageBitmap(decodedImg);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                        Log.e("Image received in wrong format", itemList.get(i).getImage());
-                    }
-                }
+//                for (int i = 0; i<3; i++) {
+//                    try {
+//                        byte[] decodedString = Base64.decode(itemList.get(i).getImage(), Base64.DEFAULT);
+//                        Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+//                        recImgList.get(i).setImageBitmap(decodedImg);
+//                    } catch (IllegalArgumentException e) {
+//                        e.printStackTrace();
+//                        Log.e("Image received in wrong format", itemList.get(i).getImage());
+//                    }
+//                }
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -440,9 +481,9 @@ public class MainHomePage extends AppCompatActivity {
 
     private void AdjustSizing() {
         // Find Image Views for Recommended shoes
-        ImageView recImgView1 = findViewById(R.id.recImgView1);
-        ImageView recImgView2 = findViewById(R.id.recImgView2);
-        ImageView recImgView3 = findViewById(R.id.recImgView3);
+//        ImageView recImgView1 = findViewById(R.id.recImgView1);
+//        ImageView recImgView2 = findViewById(R.id.recImgView2);
+//        ImageView recImgView3 = findViewById(R.id.recImgView3);
 
         // Get the actual screen width
         screenWidth = getScreenWidth();
@@ -452,9 +493,9 @@ public class MainHomePage extends AppCompatActivity {
         int margin = (screenWidth - imageViewSize) / 2;
 
         // Call method to set image sizes for image views
-        SetImgSize(recImgView1,imageViewSize);
-        SetImgSize(recImgView2,imageViewSize);
-        SetImgSize(recImgView3,imageViewSize);
+//        SetImgSize(recImgView1,imageViewSize);
+//        SetImgSize(recImgView2,imageViewSize);
+//        SetImgSize(recImgView3,imageViewSize);
 
         // find temperature text view
         TextView tempTextView = findViewById(R.id.tempTextView);

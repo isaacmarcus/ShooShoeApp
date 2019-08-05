@@ -11,19 +11,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.List;
 
-public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHolder> {
+public class MyRecAdapter extends RecyclerView.Adapter<MyRecAdapter.itemViewHolder> {
 
     private Context mCtx;
     private List<ListItem> itemList; // list to contain items in adapter
     private OnItemClickListener mListener;
 
     private static final float CARD_SIZE_RATIO = 0.75f; // ratio for resizing card
+    private static final float IMAGE_SIZE_RATIO = 0.27f;
 
     // interface to communicate with main activity
     public interface OnItemClickListener {
@@ -37,22 +38,18 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
 
     public static class itemViewHolder extends RecyclerView.ViewHolder{
 
-        ImageView imageView;
-        TextView textViewType, textViewColour, textViewDate;
-        Button deployBut;
-        CardView listItemCardView;
+        ImageView recImageView;
+        TextView recDeployBut;
+        CardView recListItemCardView;
 
         itemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.imageView);
-            textViewType = itemView.findViewById(R.id.textViewType);
-            textViewColour = itemView.findViewById(R.id.textViewColour);
-            textViewDate = itemView.findViewById(R.id.textViewDate);
-            deployBut = itemView.findViewById(R.id.deployButton);
-            listItemCardView = itemView.findViewById(R.id.listItemCardView);
+            recImageView = itemView.findViewById(R.id.recImageView);
+            recDeployBut = itemView.findViewById(R.id.recDeployButton);
+            recListItemCardView = itemView.findViewById(R.id.recListItemCardView);
 
             // WORKING
-            deployBut.setOnClickListener(v -> {
+            recDeployBut.setOnClickListener(v -> {
                 if(listener != null) {
                     int position = getAdapterPosition();
                     // check if position is valid
@@ -69,7 +66,7 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
         return itemList.size();
     }
 
-    MyHomeAdapter(Context mCtx, List<ListItem> itemList) {
+    MyRecAdapter(Context mCtx, List<ListItem> itemList) {
         this.mCtx = mCtx;
         this.itemList = itemList;
     }
@@ -78,17 +75,12 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
     @NonNull
     @Override
     public itemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+
         LayoutInflater inflater = LayoutInflater.from(mCtx);
-        View view = inflater.inflate(R.layout.list_item, null);
-        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        // Get the screen width
-        int screenWidth = MainHomePage.screenWidth;
-        // Calculate the new recycler view size
-        int cardViewSize = (int) ((float) screenWidth * CARD_SIZE_RATIO);
-        // set the new recycler view size
-        lp.width = cardViewSize;
+        View view = inflater.inflate(R.layout.rec_list_item, null);
+        RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(lp);
-        return new itemViewHolder(view, mListener);
+        return new MyRecAdapter.itemViewHolder(view, mListener);
     }
 
     public String Capitalize(String input) {
@@ -100,12 +92,6 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
     public void onBindViewHolder(@NonNull itemViewHolder itemViewHolder, int position) {
         ListItem item = itemList.get(position);
 
-        // set text views based on data received
-        itemViewHolder.textViewType.setText(Capitalize(item.getType()));
-        itemViewHolder.textViewColour.setText(Capitalize(item.getColour()));
-        itemViewHolder.textViewDate.setText("Stored " + item.getDate() + " days ago");
-//        itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
-
         // For local testing of img
 //        Context context = itemViewHolder.imageView.getContext();
 //        int id = context.getResources().getIdentifier(item.getImage(), "drawable", context.getPackageName());
@@ -115,15 +101,24 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
         try {
             byte[] decodedString = Base64.decode(item.getImage(), Base64.DEFAULT);
             Bitmap decodedImg = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            itemViewHolder.imageView.setImageBitmap(decodedImg);
+            itemViewHolder.recImageView.setImageBitmap(decodedImg);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             Log.e("Image received in wrong format", item.getImage());
         }
 
+        // Get the actual screen width
+        int screenWidth = MainHomePage.screenWidth;
+        // Calculate the new image size
+        int imageViewSize = (int) ((float) screenWidth * IMAGE_SIZE_RATIO);
+
+        // Set the Image size
+        RelativeLayout.LayoutParams recImgViewLayoutParams = (RelativeLayout.LayoutParams) itemViewHolder.recImageView.getLayoutParams();
+        // Setting the same size for Width and height
+        recImgViewLayoutParams.height = imageViewSize;
+        recImgViewLayoutParams.width = imageViewSize;
+
 
     }
-
-
 
 }
