@@ -251,6 +251,7 @@ public class MainHomePage extends AppCompatActivity {
             }
         };
 //        updateThread.start();
+        Log.e("connected",Boolean.toString(connected));
     }
 
     // method to build recycler views
@@ -587,9 +588,44 @@ public class MainHomePage extends AppCompatActivity {
         RecyclerView favRecyclerView = findViewById(R.id.favouritesRecyclerView);
         RecyclerView extraRecyclerView = findViewById(R.id.extraRecyclerView);
 
-        if (favouritesItemList.size() == 0) {
-            Log.e("list: ","empty");
-            recTextView.setText(getString(R.string.empty_title));
+        if (connected) {
+            if (favouritesItemList.size() == 0) {
+                Log.e("list: ","empty");
+                recTextView.setText(getString(R.string.empty_title));
+                recTextView2.setText(getString(R.string.empty_desc));
+                recTextView2.setVisibility(View.VISIBLE);
+                buttonsScroll.setVisibility(View.INVISIBLE);
+                favsTextView1.setVisibility(View.INVISIBLE);
+                favsTextView2.setVisibility(View.INVISIBLE);
+                extraTextView.setVisibility(View.INVISIBLE);
+                recRecyclerView.setVisibility(View.INVISIBLE);
+                favRecyclerView.setVisibility(View.INVISIBLE);
+                extraRecyclerView.setVisibility(View.INVISIBLE);
+                greyOverlay.setVisibility(View.VISIBLE);
+                greyCardOverlay.setVisibility(View.VISIBLE);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(getColor(R.color.colorEmptyList));
+                }
+            } else {
+                Log.e("list: ", "not empty");
+                recTextView.setText("We recommend");
+                recTextView2.setVisibility(View.GONE);
+                buttonsScroll.setVisibility(View.VISIBLE);
+                favsTextView1.setVisibility(View.VISIBLE);
+                favsTextView2.setVisibility(View.VISIBLE);
+                extraTextView.setVisibility(View.VISIBLE);
+                recRecyclerView.setVisibility(View.VISIBLE);
+                favRecyclerView.setVisibility(View.VISIBLE);
+                extraRecyclerView.setVisibility(View.VISIBLE);
+                greyOverlay.setVisibility(View.GONE);
+                greyCardOverlay.setVisibility(View.GONE);
+                if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    getWindow().setNavigationBarColor(getColor(R.color.colorWhite));
+                }
+            }
+        } else if (!connected) {
+            recTextView.setText(getString(R.string.disc_title));
+            recTextView2.setText(getString(R.string.disc_desc));
             recTextView2.setVisibility(View.VISIBLE);
             buttonsScroll.setVisibility(View.INVISIBLE);
             favsTextView1.setVisibility(View.INVISIBLE);
@@ -602,22 +638,6 @@ public class MainHomePage extends AppCompatActivity {
             greyCardOverlay.setVisibility(View.VISIBLE);
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(getColor(R.color.colorEmptyList));
-            }
-        } else {
-            Log.e("list: ", "not empty");
-            recTextView.setText("We recommend");
-            recTextView2.setVisibility(View.GONE);
-            buttonsScroll.setVisibility(View.VISIBLE);
-            favsTextView1.setVisibility(View.VISIBLE);
-            favsTextView2.setVisibility(View.VISIBLE);
-            extraTextView.setVisibility(View.VISIBLE);
-            recRecyclerView.setVisibility(View.VISIBLE);
-            favRecyclerView.setVisibility(View.VISIBLE);
-            extraRecyclerView.setVisibility(View.VISIBLE);
-            greyOverlay.setVisibility(View.GONE);
-            greyCardOverlay.setVisibility(View.GONE);
-            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setNavigationBarColor(getColor(R.color.colorWhite));
             }
         }
     }
