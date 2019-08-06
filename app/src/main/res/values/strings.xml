@@ -17,4 +17,6 @@
 
     <string name="empty_title">Hey, we\'ve noticed you haven\'t put any shoes in the Shoo Shoe smart shelf!</string>
     <string name="empty_desc">Go ahead and try placing a shoe on the loading tray, then pull down to refresh!</string>
+    <string name="disc_title">We can\'t connect to Shoo Shoe shelf! </string>
+    <string name="disc_desc">Check that Shoo Shoe is powered up and that you\'re connected as well!</string>
 </resources>

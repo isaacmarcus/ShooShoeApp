@@ -2,6 +2,7 @@ package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
@@ -67,16 +68,13 @@ public class MainHomePage extends AppCompatActivity {
     private static final float IMAGE_SIZE_RATIO = 0.27f;
     public static int screenWidth = 0;
 
+    // Create network status boolean
+    private static boolean connected = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_main);
-
-        // Pop up progress dialog to show loading database
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Database...");
-        progressDialog.show();
 
         // Find buttons, using linear layout so buttons and text below will both trigger on click
         LinearLayout favButt = findViewById(R.id.favButt);
@@ -99,7 +97,6 @@ public class MainHomePage extends AppCompatActivity {
             updatePage();
             pullToRefresh.setRefreshing(false);
         });
-
 
         // Method called to build recycler view on opening application
         buildRecyclerViews();
@@ -141,8 +138,6 @@ public class MainHomePage extends AppCompatActivity {
         AdjustSizing();
 
         checkEmpty();
-
-        progressDialog.dismiss();
     }
 
     public void deployItem(int position, MyHomeAdapter adapter, List<ListItem> itemList) {
@@ -231,10 +226,31 @@ public class MainHomePage extends AppCompatActivity {
         getData("Extras", extraAdapter, extraItemList);
 //        getDataLocal("Favourites",favouritesItemList);
 //        getDataLocal("Extras",extraItemList);
-        recAdapter.notifyDataSetChanged();
-        favouritesAdapter.notifyDataSetChanged();
-        extraAdapter.notifyDataSetChanged();
+//        recAdapter.notifyDataSetChanged();
+//        favouritesAdapter.notifyDataSetChanged();
+//        extraAdapter.notifyDataSetChanged();
         checkEmpty();
+
+        Thread updateThread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    getDataRec(recAdapter, recItemList);
+                    getData("Favourites", favouritesAdapter, favouritesItemList);
+                    getData("Extras", extraAdapter, extraItemList);
+                } catch (Exception e) {
+                    Log.e("Thread Error", "Error");
+                } finally {
+                    recAdapter.notifyDataSetChanged();
+                    favouritesAdapter.notifyDataSetChanged();
+                    extraAdapter.notifyDataSetChanged();
+                    checkEmpty();
+                }
+            }
+        };
+//        updateThread.start();
     }
 
     // method to build recycler views
@@ -276,6 +292,10 @@ public class MainHomePage extends AppCompatActivity {
 
     // method to parse Data and attach to List
     private void getData(String currentCategory, MyHomeAdapter adapter, List<ListItem> itemList) {
+        // Pop up progress dialog to show loading database
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Database...");
+        progressDialog.show();
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
@@ -324,19 +344,25 @@ public class MainHomePage extends AppCompatActivity {
                 itemList.addAll(currentItemList);
                 adapter.notifyDataSetChanged();
 
+                // methods to check if empty or not connected
+                checkEmpty();
+                connected = true;
+                checkNetwork();
+
             } catch (JSONException e) {
                 e.printStackTrace();
-//                    progressDialog.dismiss();
+                    progressDialog.dismiss();
             }
-//                progressDialog.dismiss();
+                progressDialog.dismiss();
         }, error -> {
             Log.e("Volley",error.toString());
-//                progressDialog.dismiss();
+            connected = false; // change connected status to false if get volley connection error
+                progressDialog.dismiss();
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
-
+        progressDialog.dismiss();
     }
 
     // method for getting and setting images for recommended shoes
@@ -488,22 +514,12 @@ public class MainHomePage extends AppCompatActivity {
     }
 
     private void AdjustSizing() {
-        // Find Image Views for Recommended shoes
-//        ImageView recImgView1 = findViewById(R.id.recImgView1);
-//        ImageView recImgView2 = findViewById(R.id.recImgView2);
-//        ImageView recImgView3 = findViewById(R.id.recImgView3);
-
         // Get the actual screen width
         screenWidth = getScreenWidth();
         // Calculate the new image size
         int imageViewSize = (int) ((float) screenWidth * IMAGE_SIZE_RATIO);
         // Calculate the margin
         int margin = (screenWidth - imageViewSize) / 2;
-
-        // Call method to set image sizes for image views
-//        SetImgSize(recImgView1,imageViewSize);
-//        SetImgSize(recImgView2,imageViewSize);
-//        SetImgSize(recImgView3,imageViewSize);
 
         // find temperature text view
         TextView tempTextView = findViewById(R.id.tempTextView);
@@ -567,6 +583,9 @@ public class MainHomePage extends AppCompatActivity {
         ImageView greyOverlay = findViewById(R.id.grey_overlay);
         ImageView greyCardOverlay = findViewById(R.id.grey_overlay_weathercard);
 
+        RecyclerView recRecyclerView = findViewById(R.id.recRecyclerView);
+        RecyclerView favRecyclerView = findViewById(R.id.favouritesRecyclerView);
+        RecyclerView extraRecyclerView = findViewById(R.id.extraRecyclerView);
 
         if (favouritesItemList.size() == 0) {
             Log.e("list: ","empty");
@@ -576,9 +595,14 @@ public class MainHomePage extends AppCompatActivity {
             favsTextView1.setVisibility(View.INVISIBLE);
             favsTextView2.setVisibility(View.INVISIBLE);
             extraTextView.setVisibility(View.INVISIBLE);
+            recRecyclerView.setVisibility(View.INVISIBLE);
+            favRecyclerView.setVisibility(View.INVISIBLE);
+            extraRecyclerView.setVisibility(View.INVISIBLE);
             greyOverlay.setVisibility(View.VISIBLE);
             greyCardOverlay.setVisibility(View.VISIBLE);
-
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(getColor(R.color.colorEmptyList));
+            }
         } else {
             Log.e("list: ", "not empty");
             recTextView.setText("We recommend");
@@ -587,12 +611,27 @@ public class MainHomePage extends AppCompatActivity {
             favsTextView1.setVisibility(View.VISIBLE);
             favsTextView2.setVisibility(View.VISIBLE);
             extraTextView.setVisibility(View.VISIBLE);
+            recRecyclerView.setVisibility(View.VISIBLE);
+            favRecyclerView.setVisibility(View.VISIBLE);
+            extraRecyclerView.setVisibility(View.VISIBLE);
             greyOverlay.setVisibility(View.GONE);
             greyCardOverlay.setVisibility(View.GONE);
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setNavigationBarColor(getColor(R.color.colorWhite));
+            }
         }
     }
 
-    private void hideItem(Object item) {
+    private void checkNetwork() {
+        // find text views to change
+        TextView recTextView = findViewById(R.id.recTextView);
+        TextView recTextView2 = findViewById(R.id.recTextView2);
+        if (connected) {
+            checkEmpty();
+        } else if (!connected) {
+            recTextView.setText(getString(R.string.disc_title));
+            recTextView2.setText(getString(R.string.disc_desc));
+        }
     }
 
 }
