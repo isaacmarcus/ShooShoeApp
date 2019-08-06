@@ -14,4 +14,7 @@
     <string name="menu_sandals">Sandals</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
+
+    <string name="empty_title">Hey, we\'ve noticed you haven\'t put any shoes in the Shoo Shoe smart shelf!</string>
+    <string name="empty_desc">Go ahead and try placing a shoe on the loading tray, then pull down to refresh!</string>
 </resources>

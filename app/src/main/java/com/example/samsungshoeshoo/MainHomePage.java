@@ -11,7 +11,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -138,6 +140,8 @@ public class MainHomePage extends AppCompatActivity {
         // Method for adjusting items in page based on screen size
         AdjustSizing();
 
+        checkEmpty();
+
         progressDialog.dismiss();
     }
 
@@ -230,6 +234,7 @@ public class MainHomePage extends AppCompatActivity {
         recAdapter.notifyDataSetChanged();
         favouritesAdapter.notifyDataSetChanged();
         extraAdapter.notifyDataSetChanged();
+        checkEmpty();
     }
 
     // method to build recycler views
@@ -547,6 +552,47 @@ public class MainHomePage extends AppCompatActivity {
         // calculate days ago
         long days = ChronoUnit.DAYS.between(startDate, endDate);
         return (Integer) (int) days;
+    }
+
+    private void checkEmpty() {
+        // Find items to hide if list is empty
+        TextView recTextView = findViewById(R.id.recTextView);
+        TextView recTextView2 = findViewById(R.id.recTextView2);
+        HorizontalScrollView buttonsScroll = findViewById(R.id.buttonsScroll);
+
+        TextView favsTextView1 = findViewById(R.id.favouritesRec1TextView);
+        TextView favsTextView2 = findViewById(R.id.favouritesRec2TextView);
+        TextView extraTextView = findViewById(R.id.unusedRecTextView);
+
+        ImageView greyOverlay = findViewById(R.id.grey_overlay);
+        ImageView greyCardOverlay = findViewById(R.id.grey_overlay_weathercard);
+
+
+        if (favouritesItemList.size() == 0) {
+            Log.e("list: ","empty");
+            recTextView.setText(getString(R.string.empty_title));
+            recTextView2.setVisibility(View.VISIBLE);
+            buttonsScroll.setVisibility(View.INVISIBLE);
+            favsTextView1.setVisibility(View.INVISIBLE);
+            favsTextView2.setVisibility(View.INVISIBLE);
+            extraTextView.setVisibility(View.INVISIBLE);
+            greyOverlay.setVisibility(View.VISIBLE);
+            greyCardOverlay.setVisibility(View.VISIBLE);
+
+        } else {
+            Log.e("list: ", "not empty");
+            recTextView.setText("We recommend");
+            recTextView2.setVisibility(View.GONE);
+            buttonsScroll.setVisibility(View.VISIBLE);
+            favsTextView1.setVisibility(View.VISIBLE);
+            favsTextView2.setVisibility(View.VISIBLE);
+            extraTextView.setVisibility(View.VISIBLE);
+            greyOverlay.setVisibility(View.GONE);
+            greyCardOverlay.setVisibility(View.GONE);
+        }
+    }
+
+    private void hideItem(Object item) {
     }
 
 }
