@@ -109,10 +109,11 @@ public class CategoryActivity extends AppCompatActivity
         progressDialog.dismiss();
 
         // on click listener for deploy button
-        adapter.setOnItemClickListener(position -> deployItem(position));
+        adapter.setOnItemClickListener(position -> deployItem(position, "deploy"));
+        adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
     }
 
-    public void deployItem(int position) {
+    public void deployItem(int position, String action) {
         // Send Post Data
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Deploying Shoe...");
@@ -121,8 +122,16 @@ public class CategoryActivity extends AppCompatActivity
         JSONObject postData = new JSONObject();
 //        String deployResponse;
         try {
-            // PUT postData required to be received by server in JSON Format
-            postData.put("shelfIndex", itemList.get(position).getShelfId());
+
+            if (action.equals("deploy")) {
+                // PUT postData required to be received by server in JSON Format
+                postData.put("shelfIndex", itemList.get(position).getShelfId());
+                postData.put("deploy", true);
+            } else if (action.equals("delete")) {
+                // PUT postData required to be received by server in JSON Format
+                postData.put("shelfIndex", itemList.get(position).getShelfId());
+                postData.put("deploy", false);
+            }
 
             // execute async Task to send post data to http server as JSONObject in string format
             SendDeviceDetails sDD = new SendDeviceDetails();
@@ -131,7 +140,11 @@ public class CategoryActivity extends AppCompatActivity
             progressDialog.dismiss();
 
             if (deployResponse.equals("true")) {
-                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+                if (action.equals("deploy")) {
+                    Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+                } else if (action.equals("delete")) {
+                    Toast.makeText(this, "Shoe removed from database...", Toast.LENGTH_SHORT).show();
+                }
                 itemList.remove(position);
                 adapter.notifyItemRemoved(position);
             } else if (deployResponse.equals("false")) {

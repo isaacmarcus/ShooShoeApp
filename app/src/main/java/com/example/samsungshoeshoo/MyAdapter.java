@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,10 +22,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
     private Context mCtx;
     private List<ListItem> itemList; // list to contain items in adapter
     private OnItemClickListener mListener;
+    private OnDeleteClickListener nListener;
 
     // interface to communicate with main activity
     public interface OnItemClickListener {
         void onItemClick(int position);
+    }
+
+    public interface OnDeleteClickListener {
+        void onDeleteClick(int position);
     }
 
     // called in main activity
@@ -32,13 +38,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         mListener = listener;
     }
 
+    public void setOnDeleteClickListener(OnDeleteClickListener listener) {
+        nListener = listener;
+    }
+
     public static class itemViewHolder extends RecyclerView.ViewHolder{
 
         ImageView imageView;
         TextView textViewType, textViewColour, textViewDate;
         Button deployBut;
+        ImageButton deleteBut;
 
-        itemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        itemViewHolder(@NonNull View itemView, OnItemClickListener listener, OnDeleteClickListener delListener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
             textViewType = itemView.findViewById(R.id.textViewType);
@@ -46,14 +57,27 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
 //            textViewShelfId = itemView.findViewById(R.id.textViewShelfId);
             textViewDate = itemView.findViewById(R.id.textViewDate);
             deployBut = itemView.findViewById(R.id.deployButton);
+            deleteBut = itemView.findViewById(R.id.deleteButton);
 
-            // WORKING
+            // listener for deploy button
             deployBut.setOnClickListener(v -> {
                 if(listener != null) {
                     int position = getAdapterPosition();
+
                     // check if position is valid
                     if(position != RecyclerView.NO_POSITION) {
                         listener.onItemClick(position);
+                    }
+                }
+            });
+
+            // listener for delete button
+            deleteBut.setOnClickListener(v -> {
+                if(delListener != null) {
+                    int position = getAdapterPosition();
+                    // check if position is valid
+                    if(position != RecyclerView.NO_POSITION) {
+                        delListener.onDeleteClick(position);
                     }
                 }
             });
@@ -78,7 +102,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.itemViewHolder> {
         View view = inflater.inflate(R.layout.list_item, null);
         RecyclerView.LayoutParams lp = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         view.setLayoutParams(lp);
-        return new itemViewHolder(view, mListener);
+        return new itemViewHolder(view, mListener, nListener);
     }
 
     public String Capitalize(String input) {
