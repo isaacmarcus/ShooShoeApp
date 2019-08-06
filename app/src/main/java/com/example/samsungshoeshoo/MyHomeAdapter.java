@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +24,7 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
     private List<ListItem> itemList; // list to contain items in adapter
     private OnItemClickListener mListener;
 
-    private static final float CARD_SIZE_RATIO = 0.75f; // ratio for resizing card
+    private static final float CARD_SIZE_RATIO = 0.76f; // ratio for resizing card
 
     // interface to communicate with main activity
     public interface OnItemClickListener {
@@ -40,6 +41,7 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
         ImageView imageView;
         TextView textViewType, textViewColour, textViewDate;
         Button deployBut;
+        ImageButton deleteBut;
         CardView listItemCardView;
 
         itemViewHolder(@NonNull View itemView, OnItemClickListener listener) {
@@ -49,6 +51,7 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
             textViewColour = itemView.findViewById(R.id.textViewColour);
             textViewDate = itemView.findViewById(R.id.textViewDate);
             deployBut = itemView.findViewById(R.id.deployButton);
+            deleteBut = itemView.findViewById(R.id.deleteButton);
             listItemCardView = itemView.findViewById(R.id.listItemCardView);
 
             // WORKING
@@ -104,6 +107,7 @@ public class MyHomeAdapter extends RecyclerView.Adapter<MyHomeAdapter.itemViewHo
         itemViewHolder.textViewType.setText(Capitalize(item.getType()));
         itemViewHolder.textViewColour.setText(Capitalize(item.getColour()));
         itemViewHolder.textViewDate.setText("Stored " + item.getDate() + " days ago");
+        itemViewHolder.deleteBut.setVisibility(View.GONE);
 //        itemViewHolder.textViewShelfId.setText("Shelf ID: " + String.valueOf(item.getShelfId()));
 
         // For local testing of img

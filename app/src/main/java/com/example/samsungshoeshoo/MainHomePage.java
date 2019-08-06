@@ -71,6 +71,11 @@ public class MainHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_main);
 
+        // Pop up progress dialog to show loading database
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Database...");
+        progressDialog.show();
+
         // Find buttons, using linear layout so buttons and text below will both trigger on click
         LinearLayout favButt = findViewById(R.id.favButt);
         LinearLayout sneakerButt = findViewById(R.id.sneakerButt);
@@ -93,13 +98,9 @@ public class MainHomePage extends AppCompatActivity {
             pullToRefresh.setRefreshing(false);
         });
 
-        // Pop up progress dialog to show loading database
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Loading Database...");
-        progressDialog.show();
+
         // Method called to build recycler view on opening application
         buildRecyclerViews();
-        progressDialog.dismiss();
 
         // on click listeners for deploy buttons
         favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
@@ -136,6 +137,8 @@ public class MainHomePage extends AppCompatActivity {
 
         // Method for adjusting items in page based on screen size
         AdjustSizing();
+
+        progressDialog.dismiss();
     }
 
     public void deployItem(int position, MyHomeAdapter adapter, List<ListItem> itemList) {

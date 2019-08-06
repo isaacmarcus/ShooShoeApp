@@ -61,7 +61,6 @@
                         android:textColor="#FFFFFF"
                         app:fontFamily="@font/samsungone400" />
 
-
                 </RelativeLayout>
 
 
