@@ -2,6 +2,7 @@ package com.example.samsungshoeshoo;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -76,6 +77,11 @@ public class MainHomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.homepage_main);
 
+        // Pop up progress dialog to show loading database
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Database...");
+        progressDialog.show();
+
         // Find buttons, using linear layout so buttons and text below will both trigger on click
         LinearLayout favButt = findViewById(R.id.favButt);
         LinearLayout sneakerButt = findViewById(R.id.sneakerButt);
@@ -100,12 +106,6 @@ public class MainHomePage extends AppCompatActivity {
 
         // Method called to build recycler view on opening application
         buildRecyclerViews();
-
-        // on click listeners for deploy buttons
-        favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
-        extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
-        recAdapter.setOnItemClickListener(position -> deployRecItem(position, recAdapter, recItemList));
-
 
         // on click listeners for categories to deploy page
         favButt.setOnClickListener(v -> {
@@ -138,13 +138,11 @@ public class MainHomePage extends AppCompatActivity {
         AdjustSizing();
 
         checkEmpty();
+        progressDialog.dismiss();
     }
 
     public void deployItem(int position, MyHomeAdapter adapter, List<ListItem> itemList) {
         // Send Post Data
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Deploying Shoe...");
-        progressDialog.show();
 
         JSONObject postData = new JSONObject();
         try {
@@ -155,7 +153,6 @@ public class MainHomePage extends AppCompatActivity {
             SendDeviceDetails sDD = new SendDeviceDetails();
             JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
             String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
-            progressDialog.dismiss();
 
             if (deployResponse.equals("true")) {
                 Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
@@ -164,17 +161,12 @@ public class MainHomePage extends AppCompatActivity {
             } else if (deployResponse.equals("false")) {
                 Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
             }
-
-            progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
-            progressDialog.dismiss();
         } catch (InterruptedException e) {
             e.printStackTrace();
-            progressDialog.dismiss();
         } catch (ExecutionException e) {
             e.printStackTrace();
-            progressDialog.dismiss();
         }
 
         updatePage();
@@ -229,27 +221,27 @@ public class MainHomePage extends AppCompatActivity {
 //        recAdapter.notifyDataSetChanged();
 //        favouritesAdapter.notifyDataSetChanged();
 //        extraAdapter.notifyDataSetChanged();
-        checkEmpty();
+//        checkEmpty();
 
-        Thread updateThread = new Thread() {
-
-            @Override
-            public void run() {
-                try {
-                    super.run();
-                    getDataRec(recAdapter, recItemList);
-                    getData("Favourites", favouritesAdapter, favouritesItemList);
-                    getData("Extras", extraAdapter, extraItemList);
-                } catch (Exception e) {
-                    Log.e("Thread Error", "Error");
-                } finally {
-                    recAdapter.notifyDataSetChanged();
-                    favouritesAdapter.notifyDataSetChanged();
-                    extraAdapter.notifyDataSetChanged();
-                    checkEmpty();
-                }
-            }
-        };
+//        Thread updateThread = new Thread() {
+//
+//            @Override
+//            public void run() {
+//                try {
+//                    super.run();
+//                    getDataRec(recAdapter, recItemList);
+//                    getData("Favourites", favouritesAdapter, favouritesItemList);
+//                    getData("Extras", extraAdapter, extraItemList);
+//                } catch (Exception e) {
+//                    Log.e("Thread Error", "Error");
+//                } finally {
+//                    recAdapter.notifyDataSetChanged();
+//                    favouritesAdapter.notifyDataSetChanged();
+//                    extraAdapter.notifyDataSetChanged();
+//                    checkEmpty();
+//                }
+//            }
+//        };
 //        updateThread.start();
         Log.e("connected",Boolean.toString(connected));
     }
@@ -289,6 +281,50 @@ public class MainHomePage extends AppCompatActivity {
         recRecyclerView.setAdapter(recAdapter);
         favouritesRecyclerView.setAdapter(favouritesAdapter);
         extraRecyclerView.setAdapter(extraAdapter);
+
+        // on click listeners for deploy buttons
+        favouritesAdapter.setOnItemClickListener(position -> deployItem(position, favouritesAdapter, favouritesItemList));
+        extraAdapter.setOnItemClickListener(position -> deployItem(position, extraAdapter, extraItemList));
+        recAdapter.setOnItemClickListener(position -> deployRecItem(position, recAdapter, recItemList));
+    }
+
+    private class GetDataAsync extends AsyncTask<JSONArray, Void, List<ListItem>> {
+
+        @Override
+        protected List<ListItem> doInBackground(JSONArray... params) {
+
+            List<ListItem> currentItemList = new ArrayList<>();
+
+            for(int i=0; i < params[0].length(); i++) {
+
+                JSONObject jsonObject = null;
+                // Add jsonObject only if the occupied field is 1
+                try {
+                    jsonObject = params[0].getJSONObject(i);
+                    if(jsonObject.getString("occ").equals("1")) {
+                        ListItem item = new ListItem();
+                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
+                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
+                        item.setType(jsonObject.getString("type"));
+                        item.setColour(jsonObject.getString("colour"));
+                        item.setOwner(jsonObject.getString("owner"));
+                        item.setImage(jsonObject.getString("img"));
+                        item.setDate(daysAgo(jsonObject.getString("timeStored")));
+
+                        currentItemList.add(item);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            return currentItemList;
+        }
+
+        @Override
+        protected void onPostExecute(List<ListItem> result) {
+            super.onPostExecute(result);
+        }
     }
 
     // method to parse Data and attach to List
@@ -302,28 +338,10 @@ public class MainHomePage extends AppCompatActivity {
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
 
             try {
-                List<ListItem> currentItemList = new ArrayList<>();
-
                 JSONArray jsonArray = response.getJSONArray("data");
-                for(int i=0; i < jsonArray.length(); i++) {
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
-
-                    // Add jsonObject only if the occupied field is 1
-                    if(jsonObject.getString("occ").equals("1")) {
-                        ListItem item = new ListItem();
-                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
-                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
-                        item.setType(jsonObject.getString("type"));
-                        item.setColour(jsonObject.getString("colour"));
-                        item.setOwner(jsonObject.getString("owner"));
-                        item.setImage(jsonObject.getString("img"));
-                        item.setDate(daysAgo(jsonObject.getString("timeStored")));
-
-                        currentItemList.add(item);
-                    }
-
-                }
+                GetDataAsync gDA = new GetDataAsync();
+                List<ListItem> currentItemList = gDA.execute(jsonArray).get();
 
                 // switch case to add based on current category selected
                 switch(currentCategory) {
@@ -344,26 +362,29 @@ public class MainHomePage extends AppCompatActivity {
                 itemList.clear(); // empty itemList before putting items in it
                 itemList.addAll(currentItemList);
                 adapter.notifyDataSetChanged();
-
                 // methods to check if empty or not connected
-                checkEmpty();
                 connected = true;
-                checkNetwork();
-
+                checkEmpty();
+                progressDialog.dismiss();
             } catch (JSONException e) {
                 e.printStackTrace();
-                    progressDialog.dismiss();
-            }
                 progressDialog.dismiss();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            }
         }, error -> {
             Log.e("Volley",error.toString());
             connected = false; // change connected status to false if get volley connection error
-                progressDialog.dismiss();
+            checkEmpty();
+            progressDialog.dismiss();
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(jsonObjectRequest);
-        progressDialog.dismiss();
     }
 
     // method for getting and setting images for recommended shoes
@@ -558,7 +579,7 @@ public class MainHomePage extends AppCompatActivity {
         // Thu Jul 25 13:30:42 2019
 //        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("EEE MMM dd HH:mm:ss yyyy", Locale.US);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MM yyyy", Locale.US);
-        Log.e(oldDate,"date received");
+//        Log.e(oldDate,"date received");
 
         // parse the date stored from database based on the formatter
         LocalDate startDate = LocalDate.parse(oldDate, formatter);
@@ -598,7 +619,7 @@ public class MainHomePage extends AppCompatActivity {
                 favsTextView1.setVisibility(View.INVISIBLE);
                 favsTextView2.setVisibility(View.INVISIBLE);
                 extraTextView.setVisibility(View.INVISIBLE);
-                recRecyclerView.setVisibility(View.INVISIBLE);
+                recRecyclerView.setVisibility(View.GONE);
                 favRecyclerView.setVisibility(View.INVISIBLE);
                 extraRecyclerView.setVisibility(View.INVISIBLE);
                 greyOverlay.setVisibility(View.VISIBLE);
@@ -631,7 +652,7 @@ public class MainHomePage extends AppCompatActivity {
             favsTextView1.setVisibility(View.INVISIBLE);
             favsTextView2.setVisibility(View.INVISIBLE);
             extraTextView.setVisibility(View.INVISIBLE);
-            recRecyclerView.setVisibility(View.INVISIBLE);
+            recRecyclerView.setVisibility(View.GONE);
             favRecyclerView.setVisibility(View.INVISIBLE);
             extraRecyclerView.setVisibility(View.INVISIBLE);
             greyOverlay.setVisibility(View.VISIBLE);
@@ -639,18 +660,6 @@ public class MainHomePage extends AppCompatActivity {
             if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setNavigationBarColor(getColor(R.color.colorEmptyList));
             }
-        }
-    }
-
-    private void checkNetwork() {
-        // find text views to change
-        TextView recTextView = findViewById(R.id.recTextView);
-        TextView recTextView2 = findViewById(R.id.recTextView2);
-        if (connected) {
-            checkEmpty();
-        } else if (!connected) {
-            recTextView.setText(getString(R.string.disc_title));
-            recTextView2.setText(getString(R.string.disc_desc));
         }
     }
 

@@ -105,12 +105,31 @@ public class CategoryActivity extends AppCompatActivity
         progressDialog.setMessage("Loading Database...");
         progressDialog.show();
         // Method called to build recycler view on opening application
-        buildRecyclerView();
-        progressDialog.dismiss();
+//        buildRecyclerView();
+//        progressDialog.dismiss();
+
+        Thread createThread = new Thread() {
+
+            @Override
+            public void run() {
+                try {
+                    buildRecyclerView();
+
+                } catch (Exception e) {
+
+                } finally {
+                    progressDialog.dismiss();
+                    // on click listener for deploy button
+                    adapter.setOnItemClickListener(position -> deployItem(position, "deploy"));
+                    adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
+                }
+            }
+        };
+        createThread.start();
 
         // on click listener for deploy button
-        adapter.setOnItemClickListener(position -> deployItem(position, "deploy"));
-        adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
+//        adapter.setOnItemClickListener(position -> deployItem(position, "deploy"));
+//        adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
     }
 
     public void deployItem(int position, String action) {

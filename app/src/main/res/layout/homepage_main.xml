@@ -355,14 +355,15 @@
             <ImageView
                 android:id="@+id/grey_overlay"
                 android:layout_width="fill_parent"
-                android:layout_height="2000dp"
+                android:layout_height="1000dp"
+                android:layout_below="@+id/weatherDisplay"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:background="#aa121212"
                 android:visibility="gone"/>
-
         </RelativeLayout>
+
     </ScrollView>
 
 
