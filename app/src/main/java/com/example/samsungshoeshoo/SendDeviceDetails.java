@@ -1,6 +1,9 @@
 package com.example.samsungshoeshoo;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
+import android.text.format.Time;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -12,11 +15,27 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class SendDeviceDetails extends AsyncTask<String, Void, String> {
+public class SendDeviceDetails extends AsyncTask<String, Integer, String> {
+
+    private Context mContext;
+    private ProgressDialog progressDialog;
+
+    public SendDeviceDetails (Context context, ProgressDialog pgD){
+        mContext = context;
+        progressDialog = new ProgressDialog(context);
+    }
 
     // method to run and send device details to RPI
     @Override
     protected String doInBackground(String... params) {
+//        final ProgressDialog progressDialog = new ProgressDialog(mContext);
+//        progressDialog.setMessage("Deploying Shoe...");
+//        progressDialog.show();
+//        pgD.setMessage("Deploying Shoe...");
+//        pgD.show();
+        Time now = new Time();
+        now.setToNow();
+        publishProgress(now.second);
 
         String data = "";
 
@@ -57,9 +76,22 @@ public class SendDeviceDetails extends AsyncTask<String, Void, String> {
         return data;
     }
 
+    protected void onPreExecute() {
+        progressDialog.setMessage("Deploying Shoe");
+        progressDialog.show();
+    }
+
+    protected void onProgressUpdate(Integer params) {
+        progressDialog.setMessage(params.toString());
+        progressDialog.show();
+    }
+
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
         Log.e("TAG", result); // this is expecting a response code to be sent from your server upon receiving the POST data
         try{
             JSONObject jsonResponse = new JSONObject(result);

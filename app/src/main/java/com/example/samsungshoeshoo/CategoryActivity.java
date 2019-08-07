@@ -27,7 +27,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -46,7 +45,7 @@ public class CategoryActivity extends AppCompatActivity
 
     private List<ListItem> itemList;
 
-    private String currentCategory = "Favourites";
+    public static String currentCategory = "Favourites";
 
 
     @Override
@@ -105,8 +104,8 @@ public class CategoryActivity extends AppCompatActivity
         progressDialog.setMessage("Loading Database...");
         progressDialog.show();
         // Method called to build recycler view on opening application
-//        buildRecyclerView();
-//        progressDialog.dismiss();
+        buildRecyclerView();
+        progressDialog.dismiss();
 
         Thread createThread = new Thread() {
 
@@ -125,18 +124,20 @@ public class CategoryActivity extends AppCompatActivity
                 }
             }
         };
-        createThread.start();
+//        createThread.start();
 
         // on click listener for deploy button
-//        adapter.setOnItemClickListener(position -> deployItem(position, "deploy"));
-//        adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
+        adapter.setOnItemClickListener(position -> {
+            deployItem(position, "deploy");
+        });
+        adapter.setOnDeleteClickListener(position -> deployItem(position, "delete"));
     }
 
     public void deployItem(int position, String action) {
         // Send Post Data
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Deploying Shoe...");
-        progressDialog.show();
+//        progressDialog.setMessage("Deploying Shoe...");
+//        progressDialog.show();
 
         JSONObject postData = new JSONObject();
 //        String deployResponse;
@@ -153,33 +154,42 @@ public class CategoryActivity extends AppCompatActivity
             }
 
             // execute async Task to send post data to http server as JSONObject in string format
-            SendDeviceDetails sDD = new SendDeviceDetails();
-            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
-            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
-            progressDialog.dismiss();
+            SendDeviceDetails sDD = new SendDeviceDetails(this, progressDialog);
+            sDD.execute(postUrl, postData.toString(), action);
+//            progressDialog.dismiss();
+//            JSONObject jsonResponse = new JSONObject(sDD.get());
+//            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
 
-            if (deployResponse.equals("true")) {
-                if (action.equals("deploy")) {
-                    Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
-                } else if (action.equals("delete")) {
-                    Toast.makeText(this, "Shoe removed from database...", Toast.LENGTH_SHORT).show();
-                }
-                itemList.remove(position);
-                adapter.notifyItemRemoved(position);
-            } else if (deployResponse.equals("false")) {
-                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+            if (action.equals("deploy")) {
+                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+            } else if (action.equals("delete")) {
+                Toast.makeText(this, "Shoe removed from database...", Toast.LENGTH_SHORT).show();
             }
 
+//            if (deployResponse.equals("true")) {
+//                if (action.equals("deploy")) {
+//                    Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+//                } else if (action.equals("delete")) {
+//                    Toast.makeText(this, "Shoe removed from database...", Toast.LENGTH_SHORT).show();
+//                }
+//                itemList.remove(position);
+//                adapter.notifyItemRemoved(position);
+//            } else if (deployResponse.equals("false")) {
+//                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+//            }
+
+            itemList.remove(position);
+            adapter.notifyItemRemoved(position);
         } catch (JSONException e) {
-            e.printStackTrace();
-            progressDialog.dismiss();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            progressDialog.dismiss();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            progressDialog.dismiss();
-        }
+            e.printStackTrace();}
+//            progressDialog.dismiss();
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+////            progressDialog.dismiss();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+////            progressDialog.dismiss();
+//        }
     }
 
 
@@ -224,6 +234,10 @@ public class CategoryActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+//            Intent i = new Intent(CategoryActivity.this,
+//                    MainHomePage.class);
+//            startActivity(i);
+//            finish();
         }
     }
 
@@ -279,75 +293,89 @@ public class CategoryActivity extends AppCompatActivity
 
     // method to parse Data and attach to List
     private void getData(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading Database...");
+        progressDialog.show();
 
         // Json Request
         final JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null, response -> {
 
             try {
-                List<ListItem> currentItemList = new ArrayList<>();
+//                List<ListItem> currentItemList = new ArrayList<>();
 
                 JSONArray jsonArray = response.getJSONArray("data");
-                for(int i=0; i < jsonArray.length(); i++) {
 
-                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                GetDataAsyncCat gDA = new GetDataAsyncCat(this);
+                List<ListItem> currentItemList = gDA.execute(jsonArray).get();
 
-                    // Add jsonObject only if the occupied field is 1
-                    if(jsonObject.getString("occ").equals("1")) {
-                        ListItem item = new ListItem();
-                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
-                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
-                        item.setType(jsonObject.getString("type"));
-                        item.setColour(jsonObject.getString("colour"));
-                        item.setOwner(jsonObject.getString("owner"));
-                        item.setImage(jsonObject.getString("img"));
-                        item.setDate(MainHomePage.daysAgo(jsonObject.getString("timeStored")));
-
-                        // switch case to add based on current category selected
-                        switch(currentCategory) {
-                            case "Favourites":
-                                currentItemList.add(item);
-                                Collections.sort(
-                                        currentItemList,
-                                        (item1, item2) -> item1.getDate() - item2.getDate());
-                                break;
-                            case "Sneakers":
-                                if(item.getType().equals("sneakers")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            case "Formals":
-                                if(item.getType().equals("formal")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            case "Slippers":
-                                if(item.getType().equals("slippers")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            case "Sandals":
-                                if(item.getType().equals("sandals")) {
-                                    currentItemList.add(item);
-                                } else {
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-
-                    }
-
-                }
+//                for(int i=0; i < jsonArray.length(); i++) {
+//
+//                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+//
+//                    // Add jsonObject only if the occupied field is 1
+//                    if(jsonObject.getString("occ").equals("1")) {
+//                        ListItem item = new ListItem();
+//                        item.setShelfId(Integer.parseInt(jsonObject.getString("shelfIndex")));
+//                        item.setOcc(Integer.parseInt(jsonObject.getString("occ")));
+//                        item.setType(jsonObject.getString("type"));
+//                        item.setColour(jsonObject.getString("colour"));
+//                        item.setOwner(jsonObject.getString("owner"));
+//                        item.setImage(jsonObject.getString("img"));
+//                        item.setDate(MainHomePage.daysAgo(jsonObject.getString("timeStored")));
+//
+//                        // switch case to add based on current category selected
+//                        switch(currentCategory) {
+//                            case "Favourites":
+//                                currentItemList.add(item);
+//                                Collections.sort(
+//                                        currentItemList,
+//                                        (item1, item2) -> item1.getDate() - item2.getDate());
+//                                break;
+//                            case "Sneakers":
+//                                if(item.getType().equals("sneakers")) {
+//                                    currentItemList.add(item);
+//                                } else {
+//                                    break;
+//                                }
+//                            case "Formals":
+//                                if(item.getType().equals("formal")) {
+//                                    currentItemList.add(item);
+//                                } else {
+//                                    break;
+//                                }
+//                            case "Slippers":
+//                                if(item.getType().equals("slippers")) {
+//                                    currentItemList.add(item);
+//                                } else {
+//                                    break;
+//                                }
+//                            case "Sandals":
+//                                if(item.getType().equals("sandals")) {
+//                                    currentItemList.add(item);
+//                                } else {
+//                                    break;
+//                                }
+//                            default:
+//                                break;
+//                        }
+//
+//                    }
+//
+//                }
 
                 itemList.clear(); // empty itemList before putting items in it
                 itemList.addAll(currentItemList);
                 adapter.notifyDataSetChanged();
-
+                progressDialog.dismiss();
             } catch (JSONException e) {
                 e.printStackTrace();
+                progressDialog.dismiss();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
             }
         }, error -> {
             Log.e("Volley",error.toString());

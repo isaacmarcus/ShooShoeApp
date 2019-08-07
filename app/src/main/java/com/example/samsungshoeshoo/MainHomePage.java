@@ -143,6 +143,9 @@ public class MainHomePage extends AppCompatActivity {
 
     public void deployItem(int position, MyHomeAdapter adapter, List<ListItem> itemList) {
         // Send Post Data
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+//        progressDialog.setMessage("Deploying Shoe...");
+//        progressDialog.show();
 
         JSONObject postData = new JSONObject();
         try {
@@ -150,33 +153,37 @@ public class MainHomePage extends AppCompatActivity {
             postData.put("shelfIndex", itemList.get(position).getShelfId());
 
             // execute AsyncTask to send post data to http server as JSONObject in string format
-            SendDeviceDetails sDD = new SendDeviceDetails();
-            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
-            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
+            SendDeviceDetails sDD = new SendDeviceDetails(this, progressDialog);
+            sDD.execute(postUrl, postData.toString());
+//            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
+//            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
 
-            if (deployResponse.equals("true")) {
-                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
-                itemList.remove(position);
-                adapter.notifyItemRemoved(position);
-            } else if (deployResponse.equals("false")) {
-                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
-            }
+//            if (deployResponse.equals("true")) {
+//                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+//                itemList.remove(position);
+//                adapter.notifyItemRemoved(position);
+//            } else if (deployResponse.equals("false")) {
+//                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+//            }
+            Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+            itemList.remove(position);
+            adapter.notifyItemRemoved(position);
         } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
+            e.printStackTrace(); }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
 
-        updatePage();
+//        updatePage();
     }
 
     public void deployRecItem(int position, MyRecAdapter adapter, List<ListItem> itemList) {
         // Send Post Data
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Deploying Shoe...");
-        progressDialog.show();
+//        progressDialog.setMessage("Deploying Shoe...");
+//        progressDialog.show();
 
         JSONObject postData = new JSONObject();
         try {
@@ -184,32 +191,35 @@ public class MainHomePage extends AppCompatActivity {
             postData.put("shelfIndex", itemList.get(position).getShelfId());
 
             // execute AsyncTask to send post data to http server as JSONObject in string format
-            SendDeviceDetails sDD = new SendDeviceDetails();
-            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
-            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
+            SendDeviceDetails sDD = new SendDeviceDetails(this, progressDialog);
+            sDD.execute(postUrl, postData.toString());
+//            JSONObject jsonResponse = new JSONObject(sDD.execute(postUrl, postData.toString()).get());
+//            String deployResponse = String.valueOf(jsonResponse.getBoolean("success"));
             progressDialog.dismiss();
 
-            if (deployResponse.equals("true")) {
-                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
-                itemList.remove(position);
-                adapter.notifyItemRemoved(position);
-            } else if (deployResponse.equals("false")) {
-                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
-            }
-
-            progressDialog.dismiss();
+//            if (deployResponse.equals("true")) {
+//                Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+//                itemList.remove(position);
+//                adapter.notifyItemRemoved(position);
+//            } else if (deployResponse.equals("false")) {
+//                Toast.makeText(this, "Error, please try again later", Toast.LENGTH_SHORT).show();
+//            }
+            Toast.makeText(this, "Shoe being deployed...", Toast.LENGTH_SHORT).show();
+            itemList.remove(position);
+            adapter.notifyItemRemoved(position);
+//            progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
-            progressDialog.dismiss();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            progressDialog.dismiss();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            progressDialog.dismiss();
-        }
+            progressDialog.dismiss();}
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//            progressDialog.dismiss();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//            progressDialog.dismiss();
+//        }
 
-        updatePage();
+//        updatePage();
     }
 
     private void updatePage() {
@@ -288,7 +298,7 @@ public class MainHomePage extends AppCompatActivity {
         recAdapter.setOnItemClickListener(position -> deployRecItem(position, recAdapter, recItemList));
     }
 
-    private class GetDataAsync extends AsyncTask<JSONArray, Void, List<ListItem>> {
+    public class GetDataAsync extends AsyncTask<JSONArray, Void, List<ListItem>> {
 
         @Override
         protected List<ListItem> doInBackground(JSONArray... params) {
