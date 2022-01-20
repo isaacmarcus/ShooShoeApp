@@ -10,14 +10,13 @@ This Android App was created in collaboration with Samsung during my Final Year 
 1. Multi-Page Navigation
 
 2. Android Material Theme Design
-
-a) Responsive design for different phone sizes
+- Responsive design for different phone sizes
 
 3. HTTP Post/Get
 
 4. JSON Datasets
-a) "byte" format data processing
-b) working with datastreams
+- "byte" format data processing
+- working with datastreams
 
 5. Object Oriented Programming
 
@@ -25,6 +24,6 @@ b) working with datastreams
 
 The writers and roles for this app are as follows;
 
-Marcus Lam - Full Stack
-Angelia Lau - UI/UX Designer
+- Marcus Lam - Full Stack
+- Angelia Lau - UI/UX Designer
 
