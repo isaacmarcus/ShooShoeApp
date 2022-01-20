@@ -10,6 +10,7 @@ This Android App was created in collaboration with Samsung during my Final Year 
 1. Multi-Page Navigation
 
 2. Android Material Theme Design
+
 a) Responsive design for different phone sizes
 
 3. HTTP Post/Get
@@ -23,6 +24,7 @@ b) working with datastreams
 ## Author / Team
 
 The writers and roles for this app are as follows;
+
 Marcus Lam - Full Stack
 Angelia Lau - UI/UX Designer
 
