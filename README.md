@@ -10,13 +10,13 @@ This Android App was created in collaboration with Samsung during my Final Year 
 1. Multi-Page Navigation
 
 2. Android Material Theme Design
-- Responsive design for different phone sizes
+  - Responsive design for different phone sizes
 
 3. HTTP Post/Get
 
 4. JSON Datasets
-- "byte" format data processing
-- working with datastreams
+  - "byte" format data processing
+  - working with datastreams
 
 5. Object Oriented Programming
 
