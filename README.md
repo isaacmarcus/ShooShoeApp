@@ -1,3 +1,5 @@
+![preview_img](https://github.com/isaacmarcus/ShooShoeApp/blob/master/readme%20media/shooshoe_gif.gif?raw=true)
+
 # Samsung " Shoo Shoe App "
 
 ## Purpose of this app
@@ -19,6 +21,10 @@ This Android App was created in collaboration with Samsung during my Final Year 
   - working with datastreams
 
 5. Object Oriented Programming
+
+## App Preview
+
+![preview_img](https://github.com/isaacmarcus/ShooShoeApp/blob/master/readme%20media/flow_preview.png?raw=true)
 
 ## Author / Team
 
