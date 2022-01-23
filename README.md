@@ -4,7 +4,7 @@
 
 ## Purpose of this app
 
-This Android App was created in collaboration with Samsung during my Final Year University Project. ShooShoe is an automated shoe storage, sorting and retrieval system utilizing robotics engineering, user-focused design and computer vision. This repository documents the accompanying Android mobile app that was developed from scratch to let users choose a pair shoes to be automatically deployed from anywhere using their phones. 
+This Android App was created in collaboration with Samsung during my Final Year University Project. ShooShoe is an automated shoe storage, sorting and retrieval system utilizing robotics engineering, user-focused design and computer vision. This repository documents the accompanying Android mobile app that was developed from scratch to let users choose a pair of shoes to be automatically deployed from anywhere using their phones. 
 
 
 ## Key Modules / Features
